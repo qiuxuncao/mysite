@@ -17,7 +17,7 @@ class RegistrationForm(forms.ModelForm):
     class Meta:
         # 声明本表单类所应用的数据模型,数据写入哪个数据库表中
         model = User
-        # 选用username和email两个属性
+        # 将username和email两个属性，插入user表中，上面的password和password2为重新定义的属性字段，会覆盖到user中，所以不需要在内部类Meta中声明
         fields = ('username', 'email')
 
     #校验两次输入的密码是否一致
@@ -37,9 +37,10 @@ class UserProfileForm(forms.ModelForm):
 class UserInfoForm(forms.ModelForm):
     class Meta:
         model = UserInfo
-        fields = ("school", "company","profession","address","aboutme")
+        fields = ("school", "company","profession","address", "aboutme")
 
 
+#emai信息来自于User表，也需要表单类
 class UserForm(forms.ModelForm):
     class Meta:
         model = User

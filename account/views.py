@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect,HttpResponseRedirect
 from .forms import LoginForm, RegistrationForm, UserProfileForm
 from django.contrib.auth import authenticate, login
@@ -38,7 +39,7 @@ def user_login(request):
         # 设置session信息
         request.session['is_login'] = True
         request.session['username'] = cd['username']
-        #设置session有效期为？秒
+        #设置session有效期为？秒，不管操作不操作系统，10秒后都会自动失效
         request.session.set_expiry(10)
 
         # 校验成功后跳转至blog
