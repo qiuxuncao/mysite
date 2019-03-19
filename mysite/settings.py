@@ -125,5 +125,5 @@ STATICFILES_DIRS =(
 )
 
 #设置登录和登出后跳转页面
-LOGIN_REDIRECT_URL = '/blog/'
+# LOGIN_REDIRECT_URL = '/blog/'
 LOGOUT_REDIRECT_URL = '/blog/'
