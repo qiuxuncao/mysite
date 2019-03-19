@@ -13,22 +13,29 @@
                 <li><a href="{% url 'blog:blog_course' %}">课程(登录后可查看)</a></li>
                 <li><a href="{% url 'blog:blog_about' %}">关于本站</a></li>
 	    </ul>
+
 	    <ul class="nav navbar-nav navbar-right" style="margin-right:10px">
+{#        如果登录验证通过#}
 		{% if user.is_authenticated %}
-		<li>
+		    <li class="dropdown">
                     <div class="dropdown" style="margin-top:8px">
-                        <button class='btn btn-default dropdown-toggle' type='button' id='dropdownMenu' data-toggle='dropdown'>欢迎您：{{ user.username }}<span class='caret'></span></button>
+                        <button class='btn btn-default dropdown-toggle' type='button' id='dropdownMenu' data-toggle='dropdown'>
+                            欢迎您：{{ user.username }}，欢迎{{ request.session.username }}
+                            <span class='caret'></span>
+                        </button>
+
                         <ul class="dropdown-menu">
                             <li><a href="#">修改密码</a></li>
-                            <li><a href="#">个人信息</a></li>
+                            <li><a href="{% url 'account:my_infomation' %}">个人信息</a></li>
                             <li><a href="#">后台管理</a></li>
                         </ul>
                     </div>
-                </li>
-		<li><a href="{% url 'account:user_logout' %}">Logout</a></li>
-		{% else %}
-		<li><a href="{% url 'account:user_login' %}">LOGIN</a></li>
-{#                <li><a href="{% url 'account:user_register' %}">Sign up</a></li>#}
+            </li>
+
+		    <li><a href="{% url 'account:user_logout' %}">Logout</a></li>
+		    {% else %}
+		    <li><a href="{% url 'account:user_login' %}">Login</a></li>
+            <li><a href="{% url 'account:user_register' %}">Sign up</a></li>
 		{% endif %}
 	    </ul>
 	</div>
