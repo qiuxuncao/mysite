@@ -40,7 +40,7 @@ def user_login(request):
         request.session['is_login'] = True
         request.session['username'] = cd['username']
         #设置session有效期为？秒，不管操作不操作系统，10秒后都会自动失效
-        request.session.set_expiry(10)
+        request.session.set_expiry(600)
 
         # 校验成功后跳转至blog
         return redirect('/blog/')
