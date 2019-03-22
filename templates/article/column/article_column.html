@@ -35,6 +35,7 @@
     <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
     <script type="text/javascript">
             function add_column(){
+                {#增加栏目函数#}
                 var index = layer.open({
                     type:1,
                     {#skin:"layui-layer-rim",#}
@@ -54,11 +55,12 @@
                                     parent.location.reload();
                                     layer.msg('goOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOooooooood')
                                 } else {
-                                    layer.msg("此栏目已存在")
+                                    layer.msg("此栏目已存在");
                                 }
                             }
                         });
                     },
+                    {#btn2为取消按钮#}
                     btn2:function(index, layero){
                         layer.close(index);
                     }
@@ -66,7 +68,7 @@
             }
             
             function edit_column(the, column_id){
-                {#取出原始的栏目名称，当前元素.父层级tr.子层级td.第二个td元素.的值#}
+                {# 取出原始的栏目名称，当前元素.父层级tr.子层级td.第二个td元素.的值 #}
                 var name = $(the).parents("tr").children("td").eq(1).text();
                 var index = layer.open({
                     type:1,
@@ -78,13 +80,16 @@
                             '</div>',
                     btn: ['确定','取消'],
                     yes:function (index, layero) {
+                         {#获取input输入框的新栏目值#}
                         new_name = $('#new_name').val();
                         $.ajax({
                             url:"{% url 'article:rename_article_column' %}",
                             type:"POST",
                             data: {'column_id': column_id, 'column_name': new_name},
+                             {#后台处理成功时回调函数，e为后台返回的值#}
                             success:function (e) {
                                 if (e=='1'){
+                                    {#修改成功后刷新页面#}
                                     parent.location.reload();
                                     layer.msg("good");
                                 } else{

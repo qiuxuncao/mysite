@@ -10,6 +10,11 @@ from .forms import ArticleColumnForm
 @csrf_exempt
 @login_wrapper
 def article_column(request):
+    '''
+    GET请求展示栏目，POST请求增加栏目
+    :param request:
+    :return:
+    '''
     if request.method == 'GET':
         columns = ArticleColumn.objects.filter(user=request.user)
         column_form = ArticleColumnForm()
@@ -36,11 +41,15 @@ def rename_article_column(request):
     :param request:
     :return:
     '''
+    # 获取从前台ajax方式传递的data数据
     column_name = request.POST['column_name']
     column_id = request.POST['column_id']
     try:
+        # 根据id查到该条数据
         line = ArticleColumn.objects.get(id=column_id)
+        # 将该数据的column字段重新赋值为column_name，即前台的new_column
         line.column = column_name
+        # 一定要保存
         line.save()
         return HttpResponse('1')
 
