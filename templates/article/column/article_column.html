@@ -103,12 +103,14 @@
             }
             
             function delete_column(the,column_id) {
+                column_name = $(the).parents("tr").children("td").eq(1).text();
                 var index = layer.open({
                     type:1,
                     area:['400px', '200px'],
                     title:'删除栏目',
+                    {# 注意次数的变量引用方式'+column_name+' #}
                     content:'<div class="text-center style="margin-top:80px">' +
-                                '<p>确定要删除该栏目吗??？</p>'+
+                                '<p>确定要删除【'+column_name+'】栏目吗？</p>'+
                             '</div>',
                     btn:['确定','取消'],
                     yes:function (index, layero) {
