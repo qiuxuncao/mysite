@@ -1,9 +1,9 @@
 from django.shortcuts import render,HttpResponse
-from .models import ArticleColumn
+from .models import ArticleColumn, ArticlePost
 from utils.decorators import login_wrapper
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from .forms import ArticleColumnForm
+from .forms import ArticleColumnForm, ArticlePostForm
 # Create your views here.
 
 
@@ -70,3 +70,38 @@ def delete_article_column(request):
     line = ArticleColumn.objects.filter(id=column_id)
     line.delete()
     return HttpResponse('1')
+
+
+@csrf_exempt
+@login_wrapper
+def article_post(request):
+    if request.method == 'POST':
+        # 实例化表单对象，data来自于前端ajax请求
+        article_post_form = ArticlePostForm(data=request.POST)
+        if article_post_form.is_valid():
+            cd = article_post_form.cleaned_data
+            try:
+                # ModelForm 类或者它的子类都具有save()方法，它的效果是生成该数据对象，并将表单数据保存到数据库
+                # commit=False只生成数据对象，不保存
+                new_article = article_post_form.save(commit=False)
+                # 给该数据对象设置作者和栏目后再进行保存
+                new_article.author = request.user
+                new_article.column = request.user.article_column.get(id=request.POST['column_id'])
+                new_article.save()
+                return HttpResponse('1')
+            except:
+                return HttpResponse('2')
+        else:
+            return HttpResponse('3')
+    else:
+        article_post_form = ArticlePostForm()
+        # 获取request.user用户的所有栏目
+        article_columns = request.user.article_column.all()
+        return render(request, 'article/column/article_post.html', {'article_post_form': article_post_form, 'article_columns': article_columns})
+
+
+@csrf_exempt
+@login_wrapper
+def article_list(request):
+    articles = ArticlePost.objects.filter(author=request.user)
+    return render(request, 'article/column/article_list.html', {'articles': articles})

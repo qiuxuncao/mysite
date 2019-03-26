@@ -1,0 +1,12 @@
+#layout { 
+	text-align: left; 
+}
+#layout > header, .btns { 
+	padding: l5px 0; 
+	width: 90%; 
+	margin: 0 auto;
+}
+#layout > header > hl { 
+	font-size: 20px; 
+	margin-bottom: 10px; 
+}
