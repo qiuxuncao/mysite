@@ -3,7 +3,7 @@
 {% block title %}article column{% endblock %}
 {% block content %}
 <div>
-    <p class="text-right"><button id="add_column" onclick="add_column()" class="btn btn-primary">add column</button></p>
+    <p class="text-right"><button id="add_article" onclick="add_column()" class="btn btn-primary">写文章</button></p>
     <table class="table table-hover table-bordered">
         <tr>
             <td>序号</td>
@@ -23,7 +23,7 @@
                 <a name="edit" href="javascript:" onclick="edit_column(this,{{ article.id }})">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
-                <a name="delete" href="javascript:" onclick="delete_column(this,{{ article.id }})">
+                <a name="delete" href="javascript:" onclick="delete_article(this,{{ article.id }})">
                     <span class="glyphicon glyphicon-trash" style="margin-left: 20px"></span>
                 </a>
             </td>
@@ -35,103 +35,71 @@
 </div>
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
-{#    <script type="text/javascript">#}
-{#            function add_column(){#}
-                {#增加栏目函数#}
-{#                var index = layer.open({#}
-{#                    type:1,#}
-                    {#skin:"layui-layer-rim",#}
-{#                    area:['400px','200px'],#}
-{#                    title:'新增栏目',#}
-{#                    content:'<div class="text-center" style="margin-top:20px"><p>请输入栏目名称</p><p>{{ column_form.column }}</p></div>',#}
-{#                    btn:['确定','取消'],#}
-{#                    yes:function(index, layero) {#}
-                        {#此处id_column为forms表单渲染出的输入框元素id#}
-{#                        column_name = $('#id_column').val();#}
-{#                        $.ajax({#}
-{#                            url:'{% url 'article:article_column' %}',#}
-{#                            type: 'POST',#}
-{#                            data:{'column': column_name},#}
-{#                            success:function (e) {#}
-{#                                if (e == '1') {#}
-{#                                    parent.location.reload();#}
-{#                                    layer.msg('goOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOooooooood')#}
-{#                                } else {#}
-{#                                    layer.msg("此栏目已存在");#}
-{#                                }#}
-{#                            }#}
-{#                        });#}
-{#                    },#}
-                    {#btn2为取消按钮#}
-{#                    btn2:function(index, layero){#}
-{#                        layer.close(index);#}
-{#                    }#}
-{#                });#}
-{#            }#}
-{#            #}
-{#            function edit_column(the, column_id){#}
-                {# 取出原始的栏目名称，当前元素.父层级tr.子层级td.第二个td元素.的值 #}
-{#                var name = $(the).parents("tr").children("td").eq(1).text();#}
-{#                var index = layer.open({#}
-{#                    type:1,#}
-{#                    area: ['400px','200px'],#}
-{#                    title: '编辑栏目',#}
-{#                    content: '<div class="text-center style="margin-top:20px">' +#}
-{#                                '<p>请编辑栏目名称</p>'+#}
-{#                                '<p><input type="text" id="new_name" value="'+name+'"></p>'+#}
-{#                            '</div>',#}
-{#                    btn: ['确定','取消'],#}
-{#                    yes:function (index, layero) {#}
+    <script type="text/javascript">
+
+            function edit_article(the, article_id){
+                 {#取出原始的栏目名称，当前元素.父层级tr.子层级td.第二个td元素.的值#}
+                var name = $(the).parents("tr").children("td").eq(1).text();
+                var index = layer.open({
+                    type:1,
+                    area: ['400px','200px'],
+                    title: '编辑栏目',
+                    content: '<div class="text-center style="margin-top:20px">' +
+                                '<p>请编辑栏目名称</p>'+
+                                '<p><input type="text" id="new_name" value="'+name+'"></p>'+
+                            '</div>',
+                    btn: ['确定','取消'],
+                    yes:function (index, layero) {
                          {#获取input输入框的新栏目值#}
-{#                        new_name = $('#new_name').val();#}
-{#                        $.ajax({#}
-{#                            url:"{% url 'article:rename_article_column' %}",#}
-{#                            type:"POST",#}
-{#                            data: {'column_id': column_id, 'column_name': new_name},#}
+                        new_name = $('#new_name').val();
+                        $.ajax({
+                            url:"{% url 'article:rename_article_column' %}",
+                            type:"POST",
+                            data: {'column_id': column_id, 'column_name': new_name},
                              {#后台处理成功时回调函数，e为后台返回的值#}
-{#                            success:function (e) {#}
-{#                                if (e=='1'){#}
-                                    {#修改成功后刷新页面#}
-{#                                    parent.location.reload();#}
-{#                                    layer.msg("good");#}
-{#                                } else{#}
-{#                                    layer.msg("修改失败");#}
-{#                                }#}
-{#                            },#}
-{#                        });#}
-{##}
-{#                    },#}
-{#                });#}
-{#            }#}
-{#            #}
-{#            function delete_column(the,column_id) {#}
-{#                column_name = $(the).parents("tr").children("td").eq(1).text();#}
-{#                var index = layer.open({#}
-{#                    type:1,#}
-{#                    area:['400px', '200px'],#}
-{#                    title:'删除栏目',#}
-                    {# 注意此处的变量引用方式'+column_name+' #}
-{#                    content:'<div class="text-center style="margin-top:80px">' +#}
-{#                                '<p>确定要删除【'+column_name+'】栏目吗？</p>'+#}
-{#                            '</div>',#}
-{#                    btn:['确定','取消'],#}
-{#                    yes:function (index, layero) {#}
-{#                        $.ajax({#}
-{#                            url:"{% url 'article:delete_column' %}",#}
-{#                            type:'POST',#}
-{#                            data:{'column_id': column_id},#}
-{#                            success:function (e) {#}
-{#                                if (e=='1'){#}
-{#                                    parent.location.reload()#}
-{#                                    layer.msg("已删除")#}
-{#                                } else{#}
-{#                                    layer.msg("删除失败")#}
-{#                                }#}
-{#                            },#}
-{#                        });#}
-{#                    },#}
-{#                });#}
-{#            }#}
-{#    </script>#}
+                            success:function (e) {
+                                if (e=='1'){
+                                    修改成功后刷新页面
+                                    parent.location.reload();
+                                    layer.msg("good");
+                                } else{
+                                    layer.msg("修改失败");
+                                }
+                            },
+                        });
+
+                    },
+                });
+            }
+
+            function delete_article(the,article_id) {
+                article_title = $(the).parents("tr").children("td").eq(1).text();
+                var index = layer.open({
+                    type:1,
+                    area:['400px', '200px'],
+                    title:'删除文章',
+                     {#注意此处的变量引用方式'+column_name+'#}
+                    content:'<div class="text-center style="margin-top:80px">' +
+                                '<p>确定要删除【'+article_title+'】文章吗？</p>'+
+                            '</div>',
+                    btn:['确定','取消'],
+                    yes:function (index, layero) {
+                        $.ajax({
+                            url:"{% url 'article:delete_article' %}",
+                            type:'POST',
+                            data:{'article_id': article_id},
+                            success:function (e) {
+                                if (e=='1'){
+                                    parent.location.reload()
+                                    layer.msg("已删除")
+                                } else{
+                                    layer.msg("删除失败")
+                                }
+                            },
+                        });
+                    },
+                });
+            }
+    </script>
 
 {% endblock %}

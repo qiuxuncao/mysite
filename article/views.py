@@ -105,3 +105,16 @@ def article_post(request):
 def article_list(request):
     articles = ArticlePost.objects.filter(author=request.user)
     return render(request, 'article/column/article_list.html', {'articles': articles})
+
+
+# @csrf_exempt
+# @login_wrapper
+def delete_article(request):
+    article_id = request.POST['article_id']
+    try:
+        line = ArticlePost.objects.get(id=article_id)
+        line.delete()
+        return HttpResponse('1')
+    except:
+        return HttpResponse('2')
+
