@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse, get_object_or_404
 from .models import ArticleColumn, ArticlePost
 from utils.decorators import login_wrapper
 from django.views.decorators.csrf import csrf_exempt
@@ -81,10 +81,11 @@ def article_post(request):
         if article_post_form.is_valid():
             cd = article_post_form.cleaned_data
             try:
-                # ModelForm 类或者它的子类都具有save()方法，它的效果是生成该数据对象，并将表单数据保存到数据库
-                # commit=False只生成数据对象，不保存
+                # ModelForm 类或者它的子类都具有save()方法，当然实例化后的article_post_form也有此方法，
+                # 它的效果是生成该数据对象，并将表单数据保存到数据库
+                # commit=False则表示只生成文章数据对象，不保存
                 new_article = article_post_form.save(commit=False)
-                # 给该数据对象设置作者和栏目后再进行保存
+                # 给该文章数据对象设置作者和栏目后再进行保存
                 new_article.author = request.user
                 new_article.column = request.user.article_column.get(id=request.POST['column_id'])
                 new_article.save()
@@ -95,21 +96,30 @@ def article_post(request):
             return HttpResponse('3')
     else:
         article_post_form = ArticlePostForm()
-        # 获取request.user用户的所有栏目
+        # 获取request.user用户的所有栏目article_column为ArticleColumn模型类中的user字段的related_name,其实等价于
+        # article_columns = ArticleColumn.objects.filter(user=request.user)
+        # 通过user实例，找到其名下所有的ArticleColumn实例
         article_columns = request.user.article_column.all()
-        return render(request, 'article/column/article_post.html', {'article_post_form': article_post_form, 'article_columns': article_columns})
+        return render(request, 'article/column/article_post.html', {'article_post_form': article_post_form,
+                                                                    'article_columns': article_columns})
 
 
 @csrf_exempt
 @login_wrapper
 def article_list(request):
+    '''文章列表'''
     articles = ArticlePost.objects.filter(author=request.user)
     return render(request, 'article/column/article_list.html', {'articles': articles})
 
 
-# @csrf_exempt
-# @login_wrapper
+@csrf_exempt
+@login_wrapper
 def delete_article(request):
+    '''
+    删除文章
+    :param request:
+    :return:
+    '''
     article_id = request.POST['article_id']
     try:
         line = ArticlePost.objects.get(id=article_id)
@@ -117,4 +127,11 @@ def delete_article(request):
         return HttpResponse('1')
     except:
         return HttpResponse('2')
+
+
+# @login_wrapper
+def article_detail(request, id, slug):
+    # print(slug,id)
+    article = get_object_or_404(ArticlePost, id=int(id), slug=slug)
+    return render(request, 'article/column/article_detail.html', {'article': article})
 

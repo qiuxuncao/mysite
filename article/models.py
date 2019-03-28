@@ -32,6 +32,9 @@ class ArticlePost(models.Model):
         #对这俩字段建立索引，后面会根据文章id和slug获取文章对象，也能提高读取文章对象速度
         index_together = (('id', 'slug'),)
 
+    def __str__(self):
+        return self.title
+
     def save(self, *args, **kwargs):
         '''
         每个数据模型都有一个save方法，这里重写该方法，目的是要实现self.slug = slugify(self.title)
@@ -44,4 +47,6 @@ class ArticlePost(models.Model):
 
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id, self.slug])
+
+    # , args = [self.id, self.slug]
 
