@@ -3,7 +3,7 @@
 {% block title %}article column{% endblock %}
 {% block content %}
 <div>
-    <p class="text-right"><button id="add_article" onclick="add_column()" class="btn btn-primary">写文章</button></p>
+    <p class="text-right"><a type="button" id="add_article" href="{% url 'article:article_post' %}" class="btn btn-primary" >写文章</a></p>
     <table class="table table-hover table-bordered">
         <tr>
             <td>序号</td>
@@ -20,7 +20,7 @@
             <td><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></td>
             <td>{{ article.column }}</td>
             <td>
-                <a name="edit" href="javascript:" onclick="edit_column(this,{{ article.id }})">
+                <a name="edit" href="{% url 'article:re_edit_article' article.id %}" onclick="re_edit_article(this,{{ article.id }})">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
                 <a name="delete" href="javascript:" onclick="delete_article(this,{{ article.id }})">
@@ -37,40 +37,26 @@
     <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
     <script type="text/javascript">
 
-            function edit_article(the, article_id){
-                 {#取出原始的栏目名称，当前元素.父层级tr.子层级td.第二个td元素.的值#}
-                var name = $(the).parents("tr").children("td").eq(1).text();
-                var index = layer.open({
-                    type:1,
-                    area: ['400px','200px'],
-                    title: '编辑栏目',
-                    content: '<div class="text-center style="margin-top:20px">' +
-                                '<p>请编辑栏目名称</p>'+
-                                '<p><input type="text" id="new_name" value="'+name+'"></p>'+
-                            '</div>',
-                    btn: ['确定','取消'],
-                    yes:function (index, layero) {
-                         {#获取input输入框的新栏目值#}
-                        new_name = $('#new_name').val();
-                        $.ajax({
-                            url:"{% url 'article:rename_article_column' %}",
-                            type:"POST",
-                            data: {'column_id': column_id, 'column_name': new_name},
-                             {#后台处理成功时回调函数，e为后台返回的值#}
-                            success:function (e) {
-                                if (e=='1'){
-                                    修改成功后刷新页面
-                                    parent.location.reload();
-                                    layer.msg("good");
-                                } else{
-                                    layer.msg("修改失败");
-                                }
-                            },
-                        });
-
-                    },
-                });
-            }
+            {#function re_edit_article(the, article_id){#}
+                 {#取出原始的文章标题和body，当前元素.父层级tr.子层级td.第二个td元素.的值#}
+                {#var article_title = $(the).parents("tr").children("td").eq(1).text();#}
+                {#var article_body = $(the);#}
+            {#    $.ajax({#}
+            {#        url:"{% url 'article:re_edit_article' article.id%}",#}
+            {#        type:"POST",#}
+            {#        data: {'article_id': article_id},#}
+                     {#后台处理成功时回调函数，e为后台返回的值#}
+            {#        success:function (e) {#}
+            {#            if (e=='1'){#}
+                            {#修改成功后刷新页面#}
+            {#                location.href = "{% url 'article:re_edit_article' %}";#}
+            {#                layer.msg("good");#}
+            {#            } else{#}
+            {#                layer.msg("修改失败");#}
+            {#            }#}
+            {#        },#}
+            {#    });#}
+            {#}#}
 
             function delete_article(the,article_id) {
                 article_title = $(the).parents("tr").children("td").eq(1).text();
@@ -89,7 +75,7 @@
                             type:'POST',
                             data:{'article_id': article_id},
                             success:function (e) {
-                                if (e=='1'){
+                                if (e == '1'){
                                     parent.location.reload()
                                     layer.msg("已删除")
                                 } else{

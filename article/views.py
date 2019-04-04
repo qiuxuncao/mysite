@@ -75,6 +75,11 @@ def delete_article_column(request):
 @csrf_exempt
 @login_wrapper
 def article_post(request):
+    '''
+    文章发布功能
+    :param request:
+    :return:
+    '''
     if request.method == 'POST':
         # 实例化表单对象，data来自于前端ajax请求
         article_post_form = ArticlePostForm(data=request.POST)
@@ -132,6 +137,39 @@ def delete_article(request):
 # @login_wrapper
 def article_detail(request, id, slug):
     # print(slug,id)
-    article = get_object_or_404(ArticlePost, id=int(id), slug=slug)
+    article = get_object_or_404(ArticlePost, id=id, slug=slug)
     return render(request, 'article/column/article_detail.html', {'article': article})
 
+
+@csrf_exempt
+# @login_wrapper
+def re_edit_article(request, article_id):
+    '''
+    再次编辑文章
+    :param request:
+    :return:
+    '''
+    if request.method == 'GET':
+        # 获取该用户的所有栏目
+        columns = request.user.article_column.all()
+        article_columns = ArticleColumn.objects.filter(user=request.user)
+        # 千万不能写成filter(id=article_id)，否则提示'QuerySet' object has no attribute 'title'
+        # article = ArticlePost.objects.filter(id=article_id)
+        article = ArticlePost.objects.get(id=article_id)
+        # 实例化表单用于前台展示文章原有标题
+        this_article_form = ArticlePostForm(initial={'title': article.title})
+        return render(request, 'article/column/re_edit_article.html',
+                      {'article': article,
+                       'article_columns': article_columns,
+                       'columns': columns,
+                        'this_article_form': this_article_form
+                       })
+    elif request.method == 'POST':
+        title = request.POST['title']
+        body = request.POST['body']
+        column_id = request.POST['column_id']
+        try:
+            ArticlePost.objects.filter(id=article_id).update(title=title, body=body,column_id=column_id)
+            return HttpResponse('1')
+        except:
+            return HttpResponse('2')
