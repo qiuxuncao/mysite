@@ -33,6 +33,7 @@ class ArticlePost(models.Model):
         index_together = (('id', 'slug'),)
 
     def __str__(self):
+        # 实例化该类时会返回对象的title
         return self.title
 
     def save(self, *args, **kwargs):

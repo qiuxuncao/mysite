@@ -3,21 +3,23 @@
 {% block title %}article detail{% endblock %}
 
 {% block content %}
-<div>
-    <header>
-        <h1>{{ article.title }}</h1>
-        <p>{{ user.username }} {{ total_views }}次阅读</p>
-    </header>
+<div class="container">
+    <div class="col-md-9">
+        <header>
+            <h1>{{ article.title }}</h1>
+            <p>{{ user.username }} {{ total_views }}次阅读</p>
+        </header>
 
-    <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}">
-    <div id="editormd-view">
-        <textarea id="append-test" style="display: none">
-{{ article.body }}
-        </textarea>
+        <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}">
+
+        <div id="editormd-view">
+            <textarea id="append-test" style="display: none">
+    {{ article.body }}
+            </textarea>
+        </div>
     </div>
-
-    <div>
-        <p>最受欢迎文章</p>
+    <div class="col-md-3">
+        <p class="text-center">最受欢迎文章</p>
         <ol>
             {% for article_rank in most_viewed %}
             <li>
@@ -26,6 +28,7 @@
             {% endfor %}
         </ol>
     </div>
+
 </div>
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'editor/lib/marked.min.js' %}"></script>
@@ -44,6 +47,7 @@
                     emoji:true,
                     tasklist:true,
                     flowChart:true,
+                    tex:true,
                     sequenceDiagram:true,
                 });
             });

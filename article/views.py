@@ -149,14 +149,17 @@ def article_detail(request, id, slug):
     # article_ranking中存放的是文章的id用来代表文章，每访问一次该文章就会增加文章的分值
     r.zincrby('article_ranking', 1, article.id)
     # 获取分值排名前十的对象
-    article_ranking = r.zrange('article_ranking', 0, -1, desc=True)[:2]
+    article_ranking = r.zrange('article_ranking', 0, -1, desc=True)[:10]
     # 获取排名前十文章的id列表,使用的是列表推导式，先进行for循环，再将每次的的值带入int()方法运算，将结果放在新的列表中
     article_ranking_ids = [int(id) for id in article_ranking]
-    print(article_ranking_ids)
+    print('文章浏览量对应的id：%s' % article_ranking_ids)
     # 查询出排名在前十的文章对象,并放在list中。注意id__in用法：id在article_ranking_ids列表中
     most_viewed = list(ArticlePost.objects.filter(id__in=article_ranking_ids))
-    # 将获得的列表按照下表索引进行排序，lamda为匿名函数，先运算后面表达式，冒号前的相当于参数
+    print('文章未排序：%s' % most_viewed)
+    # 将获得的列表按照下表索引进行排序，lamda为匿名函数，先运算后面表达式，冒号前的x相当于参数，代表most_viewed列表中文章对象
+    # 按照文章的id得到对应的下标,再按照下标进行排序
     most_viewed.sort(key=lambda x: article_ranking_ids.index(x.id))
+    print('文章已经排序：%s' % most_viewed)
     return render(request, 'article/column/article_detail.html', {'article': article,
                                                                   'total_views': total_views,
                                                                   'most_viewed': most_viewed})
@@ -174,7 +177,7 @@ def re_edit_article(request, article_id):
         # 获取该用户的所有栏目
         columns = request.user.article_column.all()
         article_columns = ArticleColumn.objects.filter(user=request.user)
-        # 千万不能写成filter(id=article_id)，否则提示'QuerySet' object has no attribute 'title'
+        # 注意是get，千万不能写成filter(id=article_id)，否则提示'QuerySet' object has no attribute 'title'
         # article = ArticlePost.objects.filter(id=article_id)
         article = ArticlePost.objects.get(id=article_id)
         # 实例化表单用于前台展示文章原有标题
