@@ -197,3 +197,6 @@ def re_edit_article(request, article_id):
             return HttpResponse('1')
         except:
             return HttpResponse('2')
+
+
+# def article_tags(request):

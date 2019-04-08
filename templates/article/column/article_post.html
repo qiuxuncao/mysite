@@ -18,6 +18,16 @@
             </select>
         </div>
     </div>
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-2 text-right"><span>标签：</span></div>
+        <div class="col-md-10 text-left">
+            {% for tag in article_tags %}
+            <input type="checkbox" value="{{ tag.tag }}">{{ tag.tag }}</input>
+            {% endfor %}
+        </div>
+    </div>
+
     <div class ="row" style="margin-top:10px;">
         <div class=" col-md-2 text-right"><span >内容：</span></div>
         <div id="editormd" class=" col-md-10 text-left ">

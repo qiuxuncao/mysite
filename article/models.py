@@ -27,6 +27,8 @@ class ArticlePost(models.Model):
     created = models.DateTimeField(default=timezone.now())
     updated = models.DateTimeField(auto_now_add=True)
 
+
+
     class Meta:
         ordering = ('title',)
         #对这俩字段建立索引，后面会根据文章id和slug获取文章对象，也能提高读取文章对象速度
@@ -51,3 +53,7 @@ class ArticlePost(models.Model):
 
     # , args = [self.id, self.slug]
 
+
+# class ArticleTags(models.Model):
+#
+#     tag = models.CharField(max_length=30)
