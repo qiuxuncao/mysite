@@ -6,14 +6,25 @@
 <div>
     <header>
         <h1>{{ article.title }}</h1>
-        <p>{{ user.username }}</p>
+        <p>{{ user.username }} {{ total_views }}次阅读</p>
     </header>
 
     <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}">
     <div id="editormd-view">
         <textarea id="append-test" style="display: none">
-            {{ article.body }}
+{{ article.body }}
         </textarea>
+    </div>
+
+    <div>
+        <p>最受欢迎文章</p>
+        <ol>
+            {% for article_rank in most_viewed %}
+            <li>
+                <a href="{{ article_rank.get_url_path }}">{{ article_rank.title }}</a>
+            </li>
+            {% endfor %}
+        </ol>
     </div>
 </div>
     <script src="{% static 'js/jquery.js' %}"></script>

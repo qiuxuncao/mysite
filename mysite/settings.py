@@ -129,3 +129,7 @@ STATICFILES_DIRS =(
 #设置登录和登出后跳转页面
 # LOGIN_REDIRECT_URL = '/blog/'
 LOGOUT_REDIRECT_URL = '/blog/'
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0

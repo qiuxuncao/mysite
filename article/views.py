@@ -4,6 +4,8 @@ from utils.decorators import login_wrapper
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .forms import ArticleColumnForm, ArticlePostForm
+import redis
+from django.conf import settings
 # Create your views here.
 
 
@@ -138,7 +140,26 @@ def delete_article(request):
 def article_detail(request, id, slug):
     # print(slug,id)
     article = get_object_or_404(ArticlePost, id=id, slug=slug)
-    return render(request, 'article/column/article_detail.html', {'article': article})
+    # 连接redis
+    r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
+    # 总的访问次数，访问一次就+1，一般命名规则为"对象类型：对象ID：对象属性"
+    total_views = r.incr('article:{}:views'.format(article.id))
+    # zincrby(name, amount, value)方法:根据amount设定的步长增加有序集合name中的value的分值（类似于权重）
+    # 实现了每访问一次文章就会将article_ranking中的article.id分值增加1
+    # article_ranking中存放的是文章的id用来代表文章，每访问一次该文章就会增加文章的分值
+    r.zincrby('article_ranking', 1, article.id)
+    # 获取分值排名前十的对象
+    article_ranking = r.zrange('article_ranking', 0, -1, desc=True)[:2]
+    # 获取排名前十文章的id列表,使用的是列表推导式，先进行for循环，再将每次的的值带入int()方法运算，将结果放在新的列表中
+    article_ranking_ids = [int(id) for id in article_ranking]
+    print(article_ranking_ids)
+    # 查询出排名在前十的文章对象,并放在list中。注意id__in用法：id在article_ranking_ids列表中
+    most_viewed = list(ArticlePost.objects.filter(id__in=article_ranking_ids))
+    # 将获得的列表按照下表索引进行排序，lamda为匿名函数，先运算后面表达式，冒号前的相当于参数
+    most_viewed.sort(key=lambda x: article_ranking_ids.index(x.id))
+    return render(request, 'article/column/article_detail.html', {'article': article,
+                                                                  'total_views': total_views,
+                                                                  'most_viewed': most_viewed})
 
 
 @csrf_exempt
