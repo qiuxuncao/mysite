@@ -4,6 +4,7 @@ from utils.decorators import login_wrapper
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .forms import ArticleColumnForm, ArticlePostForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import redis
 from django.conf import settings
 # Create your views here.
@@ -116,7 +117,24 @@ def article_post(request):
 def article_list(request):
     '''文章列表'''
     articles = ArticlePost.objects.filter(author=request.user)
-    return render(request, 'article/column/article_list.html', {'articles': articles})
+    # 将articles对象每3条一页
+    pageinator = Paginator(articles, 2)
+    # 获取前端传来的page参数
+    page = request.GET.get('page')
+    try:
+        # page()为Paginator对象的一个方法，可以获取指定页面内容，参数必须>=1的整数
+        current_page = pageinator.page(page)
+        # object_list是Page对象的属性，可以返回该页所有对象列表
+        articles = current_page.object_list
+    except PageNotAnInteger:
+        # 当page参数不是整数时，展示第一页
+        current_page = pageinator.page(1)
+        articles = current_page.object_list
+    except EmptyPage:
+        # 当page参数值为空或者没有page参数
+        current_page = pageinator.page(pageinator.num_pages)
+        articles = current_page.object_list
+    return render(request, 'article/column/article_list.html', {'articles': articles, 'page': current_page})
 
 
 @csrf_exempt

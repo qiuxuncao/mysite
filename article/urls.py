@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from . import views
+from . import views, list_views
 
 
 urlpatterns=[
@@ -11,5 +11,6 @@ urlpatterns=[
     url(r'^delete-article/$', views.delete_article, name='delete_article'),
     url(r'^article-detail/(?P<id>\d+)/(?P<slug>[-\w]+)/$', views.article_detail, name='article_detail'),
     url(r'^re-edit-article/(?P<article_id>\d+)$', views.re_edit_article, name='re_edit_article'),
+    url(r'^list-article-titles/$', list_views.article_titles, name='list_article_titles')
 
 ]

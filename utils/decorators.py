@@ -10,7 +10,7 @@ def login_wrapper(view_func):
     '''
     def inner(request):
         if request.session.get('is_login'):
-            print('获取到登陆session啦')
+            # print('获取到登陆session啦')
             return view_func(request)
         else:
             print('没有登录session')
