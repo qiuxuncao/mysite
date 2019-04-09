@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from . import views, list_views
-
+# from django.conf import settings
+# from django.conf.urls.static import static
 
 urlpatterns=[
     url(r'^article-column/$', views.article_column, name='article_column'),
@@ -14,3 +15,5 @@ urlpatterns=[
     url(r'^list-article-titles/$', list_views.article_titles, name='list_article_titles')
 
 ]
+
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

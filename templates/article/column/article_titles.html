@@ -9,10 +9,13 @@
     <div class="container">
         {% for article in articles %}
         <div class="list-group">
-            <a href="#" class="list-group-item active">
+            {% if article.avatar %}
+            <a href="{{ article.get_absolute_url }}" class="list-group-item active">
+                <img src="{{ article.avatar.url }}" alt="avatar" style="max-width: 100px; border-radius: 20px">
+            {% endif %}
                 <h4 class="list-group-item-heading">{{ article.title }}</h4>
                 <p class="list-group-item-text">作者：{{ request.user }}</p>
-                <p class="list-group-item-text">概要：{{ article.body|slice:'60'|linebreaks }}</p>
+                <p class="list-group-item-text">概要：{{ article.body|slice:'60'}}</p>
             </a>
         </div>
         {% endfor %}

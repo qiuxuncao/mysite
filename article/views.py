@@ -7,6 +7,7 @@ from .forms import ArticleColumnForm, ArticlePostForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import redis
 from django.conf import settings
+from PIL import Image
 # Create your views here.
 
 
@@ -84,8 +85,15 @@ def article_post(request):
     :return:
     '''
     if request.method == 'POST':
-        # 实例化表单对象，data来自于前端ajax请求
-        article_post_form = ArticlePostForm(data=request.POST)
+        # 实例化表单对象，来自于前端ajax请求
+        article_post_form = ArticlePostForm(request.POST, request.FILES)
+
+        print('参数为：%s' % request.POST)
+        # img = request.FILES.get('avatar')
+        # img = ArticlePost(avatar=request.POST.get('img'))
+        # img.save()
+        # print('img为：%s' % img)
+
         if article_post_form.is_valid():
             cd = article_post_form.cleaned_data
             try:
@@ -96,6 +104,9 @@ def article_post(request):
                 # 给该文章数据对象设置作者和栏目后再进行保存
                 new_article.author = request.user
                 new_article.column = request.user.article_column.get(id=request.POST['column_id'])
+                print(123231)
+                avatar = ArticlePost(avatar=request.FILES.get('avatar'))
+                print('avatar的值为：%s' % avatar.avatar)
                 new_article.save()
                 return HttpResponse('1')
             except:
