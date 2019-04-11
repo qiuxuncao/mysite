@@ -126,15 +126,10 @@ STATICFILES_DIRS =(
     os.path.join(BASE_DIR, 'static'),
 )
 
-# 媒体文件地址
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/') # media即为图片上传的根路径
-MEDIA_URL = '/media/'
-
-
 #设置登录和登出后跳转页面
 # LOGIN_REDIRECT_URL = '/blog/'
 LOGOUT_REDIRECT_URL = '/blog/'
 
 REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+REDIS_PORT = '6379'
 REDIS_DB = 0
