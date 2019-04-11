@@ -85,15 +85,11 @@ def article_post(request):
     :return:
     '''
     if request.method == 'POST':
+        # print('已进入article_post视图')
+        print('request.FILES的值为：%s' % request.FILES)
+        print('request.POST的值为：%s' % request.POST)
         # 实例化表单对象，来自于前端ajax请求
         article_post_form = ArticlePostForm(request.POST, request.FILES)
-
-        print('参数为：%s' % request.POST)
-        # img = request.FILES.get('avatar')
-        # img = ArticlePost(avatar=request.POST.get('img'))
-        # img.save()
-        # print('img为：%s' % img)
-
         if article_post_form.is_valid():
             cd = article_post_form.cleaned_data
             try:
@@ -104,15 +100,22 @@ def article_post(request):
                 # 给该文章数据对象设置作者和栏目后再进行保存
                 new_article.author = request.user
                 new_article.column = request.user.article_column.get(id=request.POST['column_id'])
-                print(123231)
-                avatar = ArticlePost(avatar=request.FILES.get('avatar'))
-                print('avatar的值为：%s' % avatar.avatar)
+                print('正在更新文章到数据库')
+                new_article.avatar = request.FILES.get('avatarrrrr')
+                # avatar = ArticlePost(avatar=request.FILES.get('avatar', None))
+                # print('avatar的值为：%s' % avatar.avatar)
+                # print('request.POST的值为：%s' % request.POST)
+                # print('request.FILES的值为：%s' % request.FILES)
+                # print('request.FILES的值为：%s' % request.FILES.get('avatarrrrr'))
+
+                print('即将保存')
                 new_article.save()
+                print('已经保存啦')
                 return HttpResponse('1')
             except:
                 return HttpResponse('2')
         else:
-            return HttpResponse('3')
+            return HttpResponse('不合法啊')
     else:
         article_post_form = ArticlePostForm()
         # 获取request.user用户的所有栏目article_column为ArticleColumn模型类中的user字段的related_name,其实等价于
@@ -122,6 +125,19 @@ def article_post(request):
         return render(request, 'article/column/article_post.html', {'article_post_form': article_post_form,
                                                                     'article_columns': article_columns})
 
+from django.core.files.uploadedfile import UploadedFile
+@csrf_exempt
+def upload_img(request):
+    if request.method == 'POST':
+        print(3333333333333)
+        print(request.FILES)
+        print('request.FILES的值为：%s' % request.FILES.get('avatarrrrr'))
+        # file = request.FILES.values()
+        # wrapped_file = UploadedFile(file)
+        # upload = ArticlePost.objects.create(avatar=wrapped_file)
+        # upload.save()
+        return HttpResponse('OK')
+
 
 @csrf_exempt
 @login_wrapper
@@ -129,7 +145,7 @@ def article_list(request):
     '''文章列表'''
     articles = ArticlePost.objects.filter(author=request.user)
     # 将articles对象每3条一页
-    pageinator = Paginator(articles, 2)
+    pageinator = Paginator(articles, 5)
     # 获取前端传来的page参数
     page = request.GET.get('page')
     try:
@@ -227,5 +243,3 @@ def re_edit_article(request, article_id):
         except:
             return HttpResponse('2')
 
-
-# def article_tags(request):

@@ -127,8 +127,9 @@ STATICFILES_DIRS =(
 )
 
 # 媒体文件地址
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/') # media即为图片上传的根路径
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 
 #设置登录和登出后跳转页面

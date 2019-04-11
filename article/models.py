@@ -27,7 +27,7 @@ class ArticlePost(models.Model):
     body = models.TextField()
     created = models.DateTimeField(default=timezone.now())
     updated = models.DateTimeField(auto_now_add=True)
-    avatar = models.ImageField(upload_to='media/%Y%m%d', blank=True)
+    avatar = models.ImageField(upload_to='media/%Y%m%d/', blank=True)
 
 
 
@@ -50,11 +50,13 @@ class ArticlePost(models.Model):
         '''
         self.slug = slugify(self.title)
         super(ArticlePost, self).save(*args, **kwargs)
+
         # 调用原有的save()方法
         # article = super(ArticlePost, self).save(*args, **kwargs)
 
         # 固定宽度缩放图片
         # if self.avatar and not kwargs.get('update_fields'):
+        # if self.avatar:
         #     image = Image.open(self.avatar)
         #     (x, y) = image.size
         #     new_x = 400

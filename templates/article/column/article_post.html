@@ -3,8 +3,8 @@
 {% block title %}POST ARTICLE{% endblock %}
 {% block content %} 
 <div style="margin-left:10px">
-    <form class ="form-hoizontal" action ="." method ="post" enctype="multipart/form-data">{% csrf_token %}
-        <div class="form-group">
+    <form class ="form-hoizontal"  method ="post">{% csrf_token %}
+        <div class="form-group" style="margin-top: 10px;">
             <label for="avatar">标题图</label>
             <input type="file" class="form-control-file" name="avatar" id="avatar">
         </div>
@@ -41,10 +41,10 @@
         </div>
     </div>
     <div class ="row">
-        <input type="button" class="btn btn-primary btn-lg" value="发布" onclick="publish_article();ajaxFileUpload()">
+        <input type="button" class="btn btn-primary btn-lg" value="发布" onclick="publish_article()" >
     </div>
 </form>
-</div> 
+</div>
 
     <script type="text/javascript" src='{% static "js/jquery.js"%}'></script>
     <script type="text/javascript" src="{% static 'js/layer.js'%}"></script>
@@ -60,19 +60,21 @@
             });
         });
     </script>
+
     <link rel="stylesheet" href="{% static 'editor/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'editor/css/editormd.css' %}">
-    <script type ="text/javascript">
 
-        function publish_article(){
+    <script type ="text/javascript">
+        {#不上传图片方法#}
+        function publish_article2(){
             {#此处的id=id_title是表单生成的，代码并没有编写此属性#}
             var title= $("#id_title").val();
             var column_id = $("#which_column").val();
             var body = $("#id_body").val();
-            var img = $("#avatar").val();
             $.ajax({
                 url:"{% url 'article:article_post' %}",
                 type:"POST",
+                async : false,
                 data:{'title':title, 'body': body, 'column_id': column_id},
                 success:function (e) {
                     if(e=='1'){
@@ -89,31 +91,37 @@
         </script>
 
      <!-- 执行上传文件操作的函数 -->
-      <script type="text/javascript">
-          function ajaxFileUpload(){
+    <script type="text/javascript">
+          function publish_article(){
               var formData = new FormData();
-                formData.append('file', $('#avatar')[0].files[0]);  //添加图片信息的参数
-                formData.append('sizeid',123);  //添加其他参数
-               $.ajaxFileUpload(
-                   {
-                url:"{% url 'article:article_post' %}",            //需要链接到服务器地址
-                secureuri:false,
-
-                data: formData,
-                {#fileElementId:'avatar',                        //文件选择框的id属性#}
-                dataType: 'json',                                     //服务器返回的格式，可以是json
-                success: function (data, status)            //相当于java中try语句块的用法
-                {
-                    $('#result').html('添加成功');
-                },
-                error: function (data, status, e)            //相当于java中catch语句块的用法
-                {
-                    $('#result').html('添加失败');
-                }
-            }
-
-               );
-
+              var fileobj=$('#avatar')[0].files[0]; //注意这里的取值方式，获取文件对象
+              formData.append('avatarrrrr', fileobj);
+              {#此处的id=id_title是表单生成的，代码并没有编写此属性#}
+              formData.append('title', $("#id_title").val());
+              formData.append('column_id', $("#which_column").val());
+              formData.append('body', $("#id_body").val());
+              $.ajax({
+                  url:"{% url 'article:article_post' %}",
+                  {#一定不要写成小写了，坑了好久#}
+                  type: 'POST',
+                  {#mimeType: "multipart/form-data",#}
+                  {#告诉jQuery不要去处理发送的数据, 发送对象。#}
+                  processData : false,
+                  {#告诉jQuery不要去设置Content-Type请求头#}
+                  contentType : false,
+                  async : false,
+                  data: formData,
+                  success:function (e) {
+                      if(e=='1'){
+                          layer.msg("成功发布");
+                          location.href = "{% url 'article:article_list' %}";
+                      }else if(e=='2'){
+                          layer.msg("sorry");
+                      } else{
+                          layer.msg("项目名和内容必须填写");
+                      }
+                      },
+              });
           }
       </script>
 {% endblock %}
