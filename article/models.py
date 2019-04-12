@@ -30,8 +30,8 @@ class ArticlePost(models.Model):
     body = models.TextField()
     created = models.DateTimeField(default=timezone.now())
     updated = models.DateTimeField(auto_now_add=True)
-    # media/%Y%m%d/为图片的放置路径
-    avatar = models.ImageField(upload_to='media/%Y%m%d/', blank=True)
+    # media/%Y%m%d/为图片的真实放置路径，因为settings中已经配置了MEDIA_ROOT为media文件夹
+    avatar = models.ImageField(upload_to='%Y%m%d/', blank=True)
 
 
 
@@ -39,7 +39,7 @@ class ArticlePost(models.Model):
         # ordering = ('title',)
         #对这俩字段建立索引，后面会根据文章id和slug获取文章对象，也能提高读取文章对象速度
         index_together = (('id', 'slug'),)
-        ordering = ('updated',)
+        ordering = ('-updated',)
 
     def __str__(self):
         # 实例化该类时会返回对象的title
