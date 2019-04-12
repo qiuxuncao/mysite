@@ -17,6 +17,9 @@ class ArticleColumn(models.Model):
     def __str__(self):
         return self.column
 
+    class Meta:
+        ordering = ('-created',)
+
 
 class ArticlePost(models.Model):
 
@@ -27,14 +30,16 @@ class ArticlePost(models.Model):
     body = models.TextField()
     created = models.DateTimeField(default=timezone.now())
     updated = models.DateTimeField(auto_now_add=True)
+    # media/%Y%m%d/为图片的放置路径
     avatar = models.ImageField(upload_to='media/%Y%m%d/', blank=True)
 
 
 
     class Meta:
-        ordering = ('title',)
+        # ordering = ('title',)
         #对这俩字段建立索引，后面会根据文章id和slug获取文章对象，也能提高读取文章对象速度
         index_together = (('id', 'slug'),)
+        ordering = ('updated',)
 
     def __str__(self):
         # 实例化该类时会返回对象的title

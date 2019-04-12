@@ -11,7 +11,6 @@ def article_titles(request):
     try:
         current_page = paginator.page(page)
         articles_list = current_page.object_list
-        a = current_page
     except PageNotAnInteger:
         current_page = paginator.page(1)
         articles_list = current_page.object_list

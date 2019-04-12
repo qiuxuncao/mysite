@@ -102,11 +102,9 @@ def article_post(request):
                 new_article.column = request.user.article_column.get(id=request.POST['column_id'])
                 print('正在更新文章到数据库')
                 new_article.avatar = request.FILES.get('avatarrrrr')
-                # avatar = ArticlePost(avatar=request.FILES.get('avatar', None))
-                # print('avatar的值为：%s' % avatar.avatar)
                 # print('request.POST的值为：%s' % request.POST)
                 # print('request.FILES的值为：%s' % request.FILES)
-                # print('request.FILES的值为：%s' % request.FILES.get('avatarrrrr'))
+                print('request.FILES的值为：%s' % request.FILES.get('avatarrrrr'))
 
                 print('即将保存')
                 new_article.save()
@@ -234,12 +232,26 @@ def re_edit_article(request, article_id):
                         'this_article_form': this_article_form
                        })
     elif request.method == 'POST':
-        title = request.POST['title']
-        body = request.POST['body']
-        column_id = request.POST['column_id']
-        try:
-            ArticlePost.objects.filter(id=article_id).update(title=title, body=body,column_id=column_id)
-            return HttpResponse('1')
-        except:
-            return HttpResponse('2')
+        article = ArticlePost.objects.get(id=article_id)
+        # 从数据库先取出具体的model对象article
+        # 将此model对象作为instance的参数值传入form。save(),同时还有request.POST,和request.FILES参数，
+        # 这样在save的时候就会update对应的model对象
+        article_post_form = ArticlePostForm(request.POST, request.FILES, instance=article)
+        if article_post_form.is_valid():
+            cd = article_post_form.cleaned_data
+            try:
+                # 此处的save有commit=False参数，意思是只生成model对象，而不保存，生成的model对象new_article就可以修改了
+                new_article = article_post_form.save(commit=False)
+                new_article.avatar = request.FILES.get('avatar')
+                new_article.title = request.POST['title']
+                new_article.body = request.POST['body']
+                new_article.column_id = request.POST['column_id']
+
+                print('开始保存')
+                new_article.save()
+                # ArticlePost.objects.filter(id=article_id).update(title=title, body=body, column_id=column_id, avatar=avatar)
+                print('保存成功')
+                return HttpResponse('1')
+            except:
+                return HttpResponse('2')
 

@@ -4,14 +4,14 @@
 {% block content %} 
 <div style="margin-left:10px">
     <form class ="form-hoizontal"  method ="post">{% csrf_token %}
-        <div class="form-group" style="margin-top: 10px;">
-            <label for="avatar">标题图</label>
-            <input type="file" class="form-control-file" name="avatar" id="avatar">
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right "><span>标题图：</span></div>
+            <input type="file" class="col-md-10 text-left" name="avatar" id="avatar">
         </div>
 
     <div class ="row" style="margin-top: 10px;">
         <div class="col-md-2 text-right "><span>标题：</span></div>
-        <div class="col-md-10 text-left ">{{article_post_form.title}}</div>
+        <div class="col-md-10 text-left">{{article_post_form.title}}</div>
     </div>
 
     <div class ="row" style=" margin-top: 10px;">
@@ -49,7 +49,6 @@
     <script type="text/javascript" src='{% static "js/jquery.js"%}'></script>
     <script type="text/javascript" src="{% static 'js/layer.js'%}"></script>
     <script type="text/javascript" src="{% static 'editor/editormd.min.js' %}"></script>
-    <script type="text/javascript" src="{% static "js/ajaxfileupload.js" %}"></script>
     <script type="text/javascript">
         $(function () {
             var editor = editormd("editormd",{
