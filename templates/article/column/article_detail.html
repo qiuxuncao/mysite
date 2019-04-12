@@ -7,7 +7,11 @@
     <div class="col-md-9">
         <header>
             <h1>{{ article.title }}</h1>
-            <p>{{ user.username }} {{ total_views }}次阅读</p>
+                <p class="text-muted">
+                    <a href="#">{{ article.author }}</a>
+                    {{ total_views }}次阅读
+                    <a href="{% url 'article:re_edit_article' article.id %}">编辑</a>
+                </p>
         </header>
 
         <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}">
@@ -23,7 +27,7 @@
         <ol>
             {% for article_rank in most_viewed %}
             <li>
-                <a href="{{ article_rank.get_url_path }}">{{ article_rank.title }}</a>
+                <a href="{{ article_rank.get_url_path }}">{{ article_rank.title|slice:'25' }}</a>
             </li>
             {% endfor %}
         </ol>

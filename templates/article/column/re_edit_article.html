@@ -4,6 +4,12 @@
 {% block content %} 
 <div style="margin-left:10px">
     <form class ="form-hoizontal" action ="." method ="post">{% csrf_token %}
+
+     <div class="row" style="margin-top: 10px;">
+            <div class="col-md-2 text-right "><span>标题图：</span></div>
+            <input type="file" class="col-md-10 text-left" name="avatar" id="avatar">
+     </div>
+
     <div class ="row" style="margin-top: 10px;">
         <div class="col-md-2 text-right "><span>标题：</span></div>
         <div class="col-md-10 text-left ">{{this_article_form.title}}</div>
@@ -54,13 +60,24 @@
     <script type ="text/javascript">
         function publish_article(){
             {#此处的id=id_title是表单生成的，代码并没有编写此属性#}
-            var title= $("#id_title").val();
-            var column_id = $("#which_column").val();
-            var body = $("#id_body").val();
+            {#var title= $("#id_title").val();#}
+            {#var column_id = $("#which_column").val();#}
+            {#var body = $("#id_body").val();#}
+
+            var formData = new FormData();
+            formData.append('avatar',$("#avatar")[0].files[0]);
+            formData.append('title', $("#id_title").val());
+            formData.append('column_id', $("#which_column").val());
+            formData.append('body', $("#id_body").val());
             $.ajax({
                 url:"{% url 'article:re_edit_article' article.id%}",
                 type:"POST",
-                data:{'title':title, 'body': body, 'column_id': column_id},
+                {#data:{'title':title, 'body': body, 'column_id': column_id},#}
+                {#告诉jQuery不要去处理发送的数据, 发送对象。#}
+                processData : false,
+                {#告诉jQuery不要去设置Content-Type请求头#}
+                contentType : false,
+                data:formData,
                 success:function (e) {
                     if(e=='1'){
                         layer.msg("修改发布成功");

@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from . import views, list_views
-# from django.conf import settings
-# from django.conf.urls.static import static
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns=[
     url(r'^article-column/$', views.article_column, name='article_column'),
@@ -12,7 +12,9 @@ urlpatterns=[
     url(r'^delete-article/$', views.delete_article, name='delete_article'),
     url(r'^article-detail/(?P<id>\d+)/(?P<slug>[-\w]+)/$', views.article_detail, name='article_detail'),
     url(r'^re-edit-article/(?P<article_id>\d+)$', views.re_edit_article, name='re_edit_article'),
-    url(r'^list-article-titles/$', list_views.article_titles, name='list_article_titles')
+    url(r'^list-article-titles/$', list_views.article_titles, name='list_article_titles'),
+
+    url(r'^upload/$', views.upload_img, name='upload_img'),
 
 ]
 

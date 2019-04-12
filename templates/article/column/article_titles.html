@@ -3,19 +3,24 @@
 
 {% block content %}
     <div class="row text-center vertical-middle-sm">
-        <h1>阅读，丰富头脑，善化行为</h1>
+        <h1>记录大千世界</h1>
     </div>
 
     <div class="container">
         {% for article in articles %}
-        <div class="list-group">
-            {% if article.avatar %}
+{#        <div class="list-group">#}
+            <div class="media">
             <a href="{{ article.get_absolute_url }}" class="list-group-item active">
-                <img src="{{ article.avatar.url }}" alt="avatar" style="max-width: 100px; border-radius: 20px">
+                    {% if article.avatar %}
+                        <div class="media-left">
+                            <img src="{{ article.avatar.url }}" alt="avatar" style="max-width: 100px; border-radius: 20px">
+                        </div>
             {% endif %}
-                <h4 class="list-group-item-heading">{{ article.title }}</h4>
-                <p class="list-group-item-text">作者：{{ request.user }}</p>
-                <p class="list-group-item-text">概要：{{ article.body|slice:'60'}}</p>
+                <div class="media-body">
+                    <h4 class="list-group-item-heading">{{ article.title }}</h4>
+                    <p class="list-group-item-text">作者：{{ article.author }}</p>
+                    <p class="list-group-item-text">概要：{{ article.body|slice:'60'}}</p>
+                </div>
             </a>
         </div>
         {% endfor %}

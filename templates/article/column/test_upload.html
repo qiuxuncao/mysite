@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{#<form action="/post-article" method="POST" enctype="multipart/form-data">#}
+<form>
+{% csrf_token %}
+            <div class="updateImg">
+            <input name="ddd" type="file" id="avatar">
+            <button id="aaa" class="btn btn-danger" type="submit" onclick="ajaxFileUpload()">上传头像</button>
+            </div>
+</form>
+
+</body>
+
+ <script type="text/javascript" src='{% static "js/jquery.js"%}'></script>
+ <!-- 执行上传文件操作的函数 -->
+    <script type="text/javascript">
+          function ajaxFileUpload(){
+              var formData = new FormData();
+              var fileobj=$('#avatar')[0].files[0];
+              formData.append('avatarrrrr', fileobj);
+              $.ajax({
+                  url:"{% url 'article:article_post' %}",
+                  type: 'post',
+                  processData:false,
+                  contentType:false,
+                  data: formData,
+                   success: function (data) {
+                       console.log(data);
+                    }
+            }
+
+               );
+
+          }
+      </script>
+
+</html>

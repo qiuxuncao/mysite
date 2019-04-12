@@ -17,7 +17,7 @@
 {#            第一列，序号，{forloop在for循环中有效，forloop.counter代表当前循环的次数从1开始，可以做序号#}
             <td>{{ forloop.counter }}</td>
 {#            <td>{{ forloop.counter0 }}</td>#}
-            <td><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></td>
+            <td><a href="{{ article.get_absolute_url }}">{{ article.title|slice:'20' }}</a></td>
             <td>{{ article.column }}</td>
             <td>
                 <a name="edit" href="{% url 'article:re_edit_article' article.id %}" onclick="re_edit_article(this,{{ article.id }})">
@@ -39,27 +39,6 @@
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
     <script type="text/javascript">
-
-            {#function re_edit_article(the, article_id){#}
-                 {#取出原始的文章标题和body，当前元素.父层级tr.子层级td.第二个td元素.的值#}
-                {#var article_title = $(the).parents("tr").children("td").eq(1).text();#}
-                {#var article_body = $(the);#}
-            {#    $.ajax({#}
-            {#        url:"{% url 'article:re_edit_article' article.id%}",#}
-            {#        type:"POST",#}
-            {#        data: {'article_id': article_id},#}
-                     {#后台处理成功时回调函数，e为后台返回的值#}
-            {#        success:function (e) {#}
-            {#            if (e=='1'){#}
-                            {#修改成功后刷新页面#}
-            {#                location.href = "{% url 'article:re_edit_article' %}";#}
-            {#                layer.msg("good");#}
-            {#            } else{#}
-            {#                layer.msg("修改失败");#}
-            {#            }#}
-            {#        },#}
-            {#    });#}
-            {#}#}
 
             function delete_article(the,article_id) {
                 article_title = $(the).parents("tr").children("td").eq(1).text();
