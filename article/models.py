@@ -33,8 +33,6 @@ class ArticlePost(models.Model):
     # media/%Y%m%d/为图片的真实放置路径，因为settings中已经配置了MEDIA_ROOT为media文件夹
     avatar = models.ImageField(upload_to='%Y%m%d/', blank=True)
 
-
-
     class Meta:
         # ordering = ('title',)
         #对这俩字段建立索引，后面会根据文章id和slug获取文章对象，也能提高读取文章对象速度
@@ -73,3 +71,9 @@ class ArticlePost(models.Model):
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id, self.slug])
 
+
+class ArticleTags(models.Model):
+    '''
+    文章标签
+    '''
+    tag_name = models.CharField(max_length=20)

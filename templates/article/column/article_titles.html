@@ -2,11 +2,12 @@
 {% block title %}文章列表{% endblock %}
 
 {% block content %}
+    <div class="col-md-9">
     <div class="row text-center vertical-middle-sm">
         <h1>记录大千世界</h1>
     </div>
 
-    <div class="container">
+{#    <div class="container">#}
         {% for article in articles %}
 {#        <div class="list-group">#}
             <div class="media">
@@ -25,5 +26,33 @@
         </div>
         {% endfor %}
 {% include 'paginator.html' %}
+{#    </div>#}
+    </div>
+
+{#当有用户信息时才显示右侧#}
+{% if author %}
+<div class="col-md-3">
+{#    <p class="text-center">最受欢迎文章</p>#}
+{#    <ol>#}
+{#        {% for article_rank in most_viewed %}#}
+{#        <li>#}
+{#                <a href="{{ article_rank.get_absolute_url }}">{{ article_rank.title|slice:'25' }}</a>#}
+{#        </li>#}
+{#        {% endfor %}#}
+{#    </ol>#}
+    <p class="text-center">{{ author }}的栏目</p>
+    <ol>
+        {% for column,count in column_count_dict.items %}
+        <li>
+            <a href="{{ article_rank.get_absolute_url }}">{{ column }}({{ count }})</a>
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}
+
+    <div class="col-md-3">
+        <p>广告位招租</p>
+            <a href="#"><img src="https://dm30webimages.lynkco.com.cn/LynkCoPortal/Content/images/chenxing2/03yushou/pc/4.jpg" width="260px"></a>
     </div>
 {% endblock %}

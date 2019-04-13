@@ -7,6 +7,7 @@ from .forms import ArticleColumnForm, ArticlePostForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import redis
 from django.conf import settings
+from django.contrib.auth.models import User
 from PIL import Image
 # Create your views here.
 
@@ -203,9 +204,28 @@ def article_detail(request, id, slug):
     # 按照文章的id得到对应的下标,再按照下标进行排序
     most_viewed.sort(key=lambda x: article_ranking_ids.index(x.id))
     print('文章已经排序：%s' % most_viewed)
+
+    # 该作者的所有栏目
+    article = ArticlePost.objects.get(id=id)
+    print('作者为：%s' % article.author)
+    user = User.objects.get(username=article.author)
+    print(user.id)
+    # 以下两种都行
+    # columns = ArticleColumn.objects.filter(user=user)
+    columns = ArticleColumn.objects.filter(user=user.id)
+    print(columns)
+    column_count_dict = {}
+    for column in columns:
+        column_count = ArticlePost.objects.filter(column=column).count()
+        # print(column_count)
+        column_count_dict[column]=column_count
+        print('%s 栏目的总数是：%s' % (column, column_count))
+    print(column_count_dict)
     return render(request, 'article/column/article_detail.html', {'article': article,
                                                                   'total_views': total_views,
-                                                                  'most_viewed': most_viewed})
+                                                                  'most_viewed': most_viewed,
+                                                                  'columns': columns,
+                                                                  'column_count_dict': column_count_dict})
 
 
 @csrf_exempt
@@ -255,3 +275,23 @@ def re_edit_article(request, article_id):
             except:
                 return HttpResponse('2')
 
+
+def right_lider(request, author):
+    # 该作者的所有栏目
+    # article = ArticlePost.objects.get(id=id)
+    print('作者为：%s' % author)
+    user = User.objects.get(username=author)
+    print(user.id)
+    # 以下两种都行
+    # columns = ArticleColumn.objects.filter(user=user)
+    columns = ArticleColumn.objects.filter(user=user.id)
+    print(columns)
+    column_count_dict = {}
+    for column in columns:
+        column_count = ArticlePost.objects.filter(column=column).count()
+        # print(column_count)
+        column_count_dict[column] = column_count
+        print('%s 栏目的总数是：%s' % (column, column_count))
+    print(column_count_dict)
+    return column_count_dict
+    # return render(request, 'article/right_lider.html', {'column_count_dict': column_count_dict})
