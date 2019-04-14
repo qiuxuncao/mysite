@@ -54,26 +54,12 @@ class ArticlePost(models.Model):
         self.slug = slugify(self.title)
         super(ArticlePost, self).save(*args, **kwargs)
 
-        # 调用原有的save()方法
-        # article = super(ArticlePost, self).save(*args, **kwargs)
-
-        # 固定宽度缩放图片
-        # if self.avatar and not kwargs.get('update_fields'):
-        # if self.avatar:
-        #     image = Image.open(self.avatar)
-        #     (x, y) = image.size
-        #     new_x = 400
-        #     new_y = int(new_x*(y/x))
-        #     resized_image = image.resize((new_x, new_y), Image.ANTIALIAS)
-        #     resized_image.save(self.avatar.path)
-        # return article
-
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id, self.slug])
 
 
-class ArticleTags(models.Model):
-    '''
-    文章标签
-    '''
-    tag_name = models.CharField(max_length=20)
+# class ArticleTags(models.Model):
+#     '''
+#     文章标签
+#     '''
+#     tag_name = models.CharField(max_length=20)

@@ -225,7 +225,8 @@ def article_detail(request, id, slug):
                                                                   'total_views': total_views,
                                                                   'most_viewed': most_viewed,
                                                                   'columns': columns,
-                                                                  'column_count_dict': column_count_dict})
+                                                                  'column_count_dict': column_count_dict
+                                                                  })
 
 
 @csrf_exempt

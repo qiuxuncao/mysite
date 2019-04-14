@@ -44,7 +44,7 @@
     <ol>
         {% for column,count in column_count_dict.items %}
         <li>
-            <a href="{{ article_rank.get_absolute_url }}">{{ column }}({{ count }})</a>
+            <a href="{% url 'article:list_article_titles_bysomeone' author column%}">{{ column }}({{ count }})</a>
         </li>
         {% endfor %}
     </ol>
