@@ -2,16 +2,35 @@ from django.shortcuts import render
 from .models import ArticlePost
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.models import User
-from .views import right_lider
+from .views import right_lider, most_viewd, article_detail
+from . import views
 from .models import ArticleColumn
-
+from django.conf import settings
+import redis
 
 def article_titles(request):
 
-    # print()
+    # 从redis中取到由文章id排序的list，通过list的文章id查到文章title，传递给前台展示
+    r = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
+    # 此处的article_ranking键为article_detail()视图中生成的，由于article_ranking的type类型为zset,所以使用zrange获取该键的值
+    # zrevrange为按照分值降序排列，zrange按照分值升序排列0代表从下标0开始，-1代表结尾，整体代表全部，如果前十个就是r.zrevrange('article_ranking', 0, 9)
+    list_sorted = r.zrevrange('article_ranking', 0, -1)
+    print(list_sorted)
+    # 定义空的列表，用于存放按照id查出来的文章对象
+    articles_list_most_viewed = []
+    for i in list_sorted[0:10]:
+        print(i)
+        i.decode()
+        # list的元素是bytes类型,
+        print(type(i))
+        # 根据id查出文章对象
+        article = ArticlePost.objects.get(id=i)
+        print(article.title)
+        # 将前十个文章对象放进列表中,传递到模板展示
+        articles_list_most_viewed.append(article)
+        print(articles_list_most_viewed)
+
     articles = ArticlePost.objects.all()
-    # author = request.GET.get('article.author')
-    # print(author)
     paginator = Paginator(articles, 5)
     page = request.GET.get('page')
     try:
@@ -23,7 +42,9 @@ def article_titles(request):
     except EmptyPage:
         current_page = paginator.page(paginator.num_pages)
         articles_list = current_page.object_list
-    return render(request, 'article/column/article_titles.html', {'articles': articles_list, 'page': current_page})
+    return render(request, 'article/column/article_titles.html', {'articles': articles_list,
+                                                                  'page': current_page,
+                                                                  'articles_list_most_viewed': articles_list_most_viewed})
 
 
 def article_titles_by_someone(request, author):
@@ -81,5 +102,5 @@ def article_titles_by_someone(request, author):
                                                                   # 此处不能加'author': author，添加后报错，暂时未知原因
                                                                   # Reverse for 'list_article_titles_bysomeone' with arguments '('guchen', <ArticleColumn: django>)' not found.
                                                                   # 1 pattern(s) tried: ['article/list-article-titles-bysomeone/(?P<author>[-\\w]+)/$']
-                                                                  # 'author': author
+                                                                  'author': author
                                                                   })
