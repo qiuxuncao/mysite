@@ -12,7 +12,11 @@
             <li><a href="{% url 'blog:blog_title' %}">BLOG</a></li>
             <li><a href="{% url 'article:list_article_titles' %}">文章</a></li>
             <li><a href="{% url 'article:article_list' %}">文章管理</a></li>
-            <li><a href="#">美图</a></li>
+
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'article:list_article_titles_bysomeone' request.user %}">我的文章</a></li>
+            {% endif %}
+
             <li><a href="{% url 'blog:blog_course' %}">课程(登录后可查看)</a></li>
             <li><a href="{% url 'blog:blog_about' %}">关于本站</a></li>
 	    </ul>

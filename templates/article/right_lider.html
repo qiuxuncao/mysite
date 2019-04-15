@@ -1,0 +1,22 @@
+{#当有用户信息时才显示右侧#}
+{% if article.author %}
+<div class="col-md-3">
+    <p class="text-center">最受欢迎文章</p>
+    <ol>
+        {% for article_rank in most_viewed %}
+        <li>
+                <a href="{{ article_rank.get_absolute_url }}">{{ article_rank.title|slice:'25' }}</a>
+        </li>
+        {% endfor %}
+    </ol>
+
+    <p class="text-center">{{ article.author }}的栏目</p>
+    <ol>
+        {% for column,count in column_count_dict.items %}
+        <li>
+            <a href="{{ article_rank.get_absolute_url }}">{{ column }}({{ count }})</a>
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}

@@ -8,7 +8,8 @@
         <header>
             <h1>{{ article.title }}</h1>
                 <p class="text-muted">
-                    <a href="#">{{ article.author }}</a>
+                    {# 将作者信息追加到url中，并再url中捕获该参数，再到视图中提取该参数的值，查询出该作者对应的文章#}
+                    <a href="{% url 'article:list_article_titles_bysomeone' article.author %}">{{ article.author }}</a>
                     {{ total_views }}次阅读
                     <a href="{% url 'article:re_edit_article' article.id %}">编辑</a>
                 </p>
@@ -27,7 +28,18 @@
         <ol>
             {% for article_rank in most_viewed %}
             <li>
-                <a href="{{ article_rank.get_url_path }}">{{ article_rank.title|slice:'25' }}</a>
+                    <a href="{{ article_rank.get_absolute_url }}">{{ article_rank.title|slice:'25' }}</a>
+            </li>
+            {% endfor %}
+        </ol>
+
+        <p class="text-center">{{ article.author }}的栏目</p>
+        <ol>
+            {% for column,count in column_count_dict.items %}
+            <li>
+
+                <a href="#">{{ column }}({{ count }})</a>
+
             </li>
             {% endfor %}
         </ol>
