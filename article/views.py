@@ -1,5 +1,5 @@
 from django.shortcuts import render,HttpResponse, get_object_or_404
-from .models import ArticleColumn, ArticlePost
+from .models import ArticleColumn, ArticlePost, Comments
 from utils.decorators import login_wrapper
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -9,6 +9,7 @@ import redis
 from django.conf import settings
 from django.contrib.auth.models import User
 from PIL import Image
+from .forms import CommentsForm
 # Create your views here.
 
 
@@ -221,11 +222,25 @@ def article_detail(request, id, slug):
         column_count_dict[column]=column_count
         print('%s 栏目的总数是：%s' % (column, column_count))
     print(column_count_dict)
+
+    # 评论功能代码
+    if request.method == 'POST':
+        comment_form = CommentsForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.body = request.POST['body']
+            new_comment.article = ArticlePost.objects.get(id=id)
+            new_comment.user = request.user
+            new_comment.save()
+    else:
+        comment_form = CommentsForm()
+
     return render(request, 'article/column/article_detail.html', {'article': article,
                                                                   'total_views': total_views,
                                                                   'most_viewed': most_viewed,
                                                                   'columns': columns,
-                                                                  'column_count_dict': column_count_dict
+                                                                  'column_count_dict': column_count_dict,
+                                                                  'comment_form': comment_form
                                                                   })
 
 

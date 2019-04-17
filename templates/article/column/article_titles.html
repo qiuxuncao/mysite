@@ -24,6 +24,8 @@
                 </div>
             </a>
         </div>
+            {% empty %}
+            <h3>该栏目还没有文章</h3>
         {% endfor %}
 {% include 'paginator.html' %}
 {#    </div>#}
@@ -33,10 +35,10 @@
     <div class="col-md-3">
         <p class="text-center">广告位招租</p>
             <a href="#"><img src="https://dm30webimages.lynkco.com.cn/LynkCoPortal/Content/images/chenxing2/03yushou/pc/4.jpg" width="260px"></a>
-    </div>
 
 
-<div class="col-md-3">
+
+
     <p class="text-center">最受欢迎文章</p>
     <ol>
         {% for article_rank in articles_list_most_viewed %}
@@ -50,8 +52,9 @@
     <p class="text-center">{{ author }}的栏目</p>
     <ol>
         {% for column,count in column_count_dict.items %}
+{#            <p>{{ column }}</p>#}
         <li>
-            <a href="{% url 'article:list_article_titles_bysomeone' author %}">{{ column }}({{ count }})</a>
+            <a href="{% url 'article:list_article_titles_bysomeone' author %}?column={{ column }}">{{ column }}({{ count }})</a>
         </li>
         {% endfor %}
     </ol>

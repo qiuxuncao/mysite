@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import ArticlePost
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.models import User
@@ -47,7 +47,7 @@ def article_titles(request):
                                                                   'articles_list_most_viewed': articles_list_most_viewed})
 
 
-def article_titles_by_someone(request, author):
+def article_titles_by_someone(request, author, *args):
     '''
     该作者的所有文章
     :param request:
@@ -79,28 +79,50 @@ def article_titles_by_someone(request, author):
     print('作者是：%s' % author)
     user = User.objects.get(username=author)
     print(user)
-    author1 = author
     # 查询出该作者所有的文章对象
-    articles = ArticlePost.objects.filter(author=user)
-    # else:
-    #     articles = ArticlePost.objects.filter(author=user)
-    print(articles[0].author)
-    paginator = Paginator(articles, 5)
-    page = request.GET.get('page')
-    try:
-        current_page = paginator.page(page)
-        articles_list = current_page.object_list
-    except PageNotAnInteger:
-        current_page = paginator.page(1)
-        articles_list = current_page.object_list
-    except EmptyPage:
-        current_page = paginator.page(paginator.num_pages)
-        articles_list = current_page.object_list
-    return render(request, 'article/column/article_titles.html', {'articles': articles_list,
+    column_name = request.GET.get('column')
+    print(column_name)
+
+    if column_name:
+        column_id = ArticleColumn.objects.get(column=column_name, user=user)
+        articles = ArticlePost.objects.filter(author=user, column=column_id)
+
+        query_keyword = column_name
+
+        paginator = Paginator(articles, 5)
+        page = request.GET.get('page')
+        try:
+            current_page = paginator.page(page)
+            articles_list = current_page.object_list
+        except PageNotAnInteger:
+            current_page = paginator.page(1)
+            articles_list = current_page.object_list
+        except EmptyPage:
+            current_page = paginator.page(paginator.num_pages)
+            articles_list = current_page.object_list
+        return render(request, 'article/column/article_titles.html', {'articles': articles_list,
                                                                   'page': current_page,
                                                                   'column_count_dict': column_count_dict,
-                                                                  # 此处不能加'author': author，添加后报错，暂时未知原因
-                                                                  # Reverse for 'list_article_titles_bysomeone' with arguments '('guchen', <ArticleColumn: django>)' not found.
-                                                                  # 1 pattern(s) tried: ['article/list-article-titles-bysomeone/(?P<author>[-\\w]+)/$']
                                                                   'author': author
                                                                   })
+    else:
+        articles = ArticlePost.objects.filter(author=user)
+        # else:
+        #     articles = ArticlePost.objects.filter(author=user)
+        print(articles[0].author)
+        paginator = Paginator(articles, 5)
+        page = request.GET.get('page')
+        try:
+            current_page = paginator.page(page)
+            articles_list = current_page.object_list
+        except PageNotAnInteger:
+            current_page = paginator.page(1)
+            articles_list = current_page.object_list
+        except EmptyPage:
+            current_page = paginator.page(paginator.num_pages)
+            articles_list = current_page.object_list
+        return render(request, 'article/column/article_titles.html', {'articles': articles_list,
+                                                                      'page': current_page,
+                                                                      'column_count_dict': column_count_dict,
+                                                                      'author': author
+                                                                      })

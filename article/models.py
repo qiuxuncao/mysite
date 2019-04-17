@@ -63,3 +63,13 @@ class ArticlePost(models.Model):
 #     文章标签
 #     '''
 #     tag_name = models.CharField(max_length=20)
+
+
+class Comments(models.Model):
+    user = models.ForeignKey(User, related_name='comment_user')
+    article = models.ForeignKey(ArticlePost, related_name='comments')
+    body = models.TextField(max_length=200)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created',)

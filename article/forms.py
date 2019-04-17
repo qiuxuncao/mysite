@@ -1,4 +1,4 @@
-from .models import ArticleColumn, ArticlePost
+from .models import ArticleColumn, ArticlePost, Comments
 from django import forms
 
 
@@ -14,13 +14,8 @@ class ArticlePostForm(forms.ModelForm):
         # fields = ('title', 'body')
         fields = ('title', 'body', 'avatar')
 
-    # def save(self, *args, **kwargs):
-    #     '''
-    #     重写form的save()方法，使其可以根据是否存在旧数据，而进行修改
-    #     :param args:
-    #     :param kwargs:
-    #     :return:
-    #     '''
-    #     # if not self.pk:
 
-
+class CommentsForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ('body',)
