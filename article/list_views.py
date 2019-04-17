@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from .models import ArticlePost
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.models import User
@@ -82,13 +82,12 @@ def article_titles_by_someone(request, author, *args):
     # 查询出该作者所有的文章对象
     column_name = request.GET.get('column')
     print(column_name)
-
     if column_name:
         column_id = ArticleColumn.objects.get(column=column_name, user=user)
         articles = ArticlePost.objects.filter(author=user, column=column_id)
-
-        query_keyword = column_name
-
+        # else:
+        #     articles = ArticlePost.objects.filter(author=user)
+        # print(articles[0].author)
         paginator = Paginator(articles, 5)
         page = request.GET.get('page')
         try:
