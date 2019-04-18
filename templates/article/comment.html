@@ -1,0 +1,11 @@
+{#            此处的article.comments.all意思是取得该文章下对应的所有评论，comments就是Comments模型中的#}
+{#            article = models.ForeignKey(ArticlePost, related_name='comments')中的related_name的值#}
+{% for comment in article.comments.all %}
+    <div id="comment">
+    <a href="{% url 'article:list_article_titles_bysomeone' comment.user %}"><div>{{ comment.user }}:</div></a>
+    <p>{{ comment.created }}</p>
+    <div style="margin-left: 40px">{{ comment.body }}</div>
+    </div>
+    {% empty %}
+    <p>还没有评论</p>
+{% endfor %}

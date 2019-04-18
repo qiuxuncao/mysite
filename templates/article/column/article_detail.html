@@ -28,13 +28,16 @@
         <div style="background:#F0F0F0; color:#2F2F2F" id="comments">
 {#            此处的article.comments.all意思是取得该文章下对应的所有评论，comments就是Comments模型中的#}
 {#            article = models.ForeignKey(ArticlePost, related_name='comments')中的related_name的值#}
-            {% for comment in article.comments.all %}
-                <a href="{% url 'article:list_article_titles_bysomeone' comment.user %}"><div>{{ comment.user }}:</div></a>
-                <p>{{ comment.created }}</p>
-                <div style="margin-left: 40px">{{ comment.body }}</div>
-                {% empty %}
-                <p>还没有评论</p>
-            {% endfor %}
+        {% include 'article/comment.html' %}
+{#            {% for comment in article.comments.all %}#}
+{#                <div id="comment">#}
+{#                <a href="{% url 'article:list_article_titles_bysomeone' comment.user %}"><div>{{ comment.user }}:</div></a>#}
+{#                <p>{{ comment.created }}</p>#}
+{#                <div style="margin-left: 40px">{{ comment.body }}</div>#}
+{#                </div>#}
+{#                {% empty %}#}
+{#                <p>还没有评论</p>#}
+{#            {% endfor %}#}
         </div>
 
         <h5>留下你的评论</h5>
@@ -115,16 +118,15 @@
                     contentType : false,
                     async : false,
                     data:formData,
-                    dataType: "json",
-                    success:function (e) {
+                    {#dataType: "json",#}
+{#                    此处返回的datas是HTML格式#}
+                    success:function (datas) {
                       if(1){
-                          var datas = $.parseJSON(e);
-                          $('#comments').html(datas.html);
+                          $('#comments').html(datas);
                           layer.msg("成功发布");
-                          {#get_all_coments()#}
-                          {#location.href = "{% url 'article:article_list' %}";#}
-                      }else if(e=='2'){
-                          layer.msg("sorry");
+                          resettext();
+                      }else if(datas=='2'){
+                          layer.msg("请填写内容");
                       } else{
                           layer.msg("项目名和内容必须填写");
                       }
@@ -134,11 +136,9 @@
     </script>
 
     <script type="text/javascript">
-            function get_all_coments() {
-                $.ajax({
-
-                })
-            }
+        function resettext(){
+            $('#id_body').val('');
+        }
     </script>
 
 {% endblock %}

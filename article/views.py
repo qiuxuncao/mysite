@@ -239,19 +239,19 @@ def article_detail(request, id, slug):
             print(6666666666666666666)
             print(comments.__len__())
 
-            for comment in comments:
-                print(comment.body)
-                print(comment.created)
-                global htmls
-                html = '<a href="#"></a><div style="margin-left: 40px">'+comment.body+'</div><p>还没有评论</p>'
-                htmls = html+html
-                print(html)
-                print('返回了HTML')
-            print(html)
-            return HttpResponse(json.dumps({'html': html}))
-
+            # for comment in comments:
+            #     print(comment.body)
+            #     print(comment.created)
+            #     global htmls
+            #     html = '<a href="#"></a><div style="margin-left: 40px">'+comment.body+'</div><p>还没有评论</p>'
+            #     htmls = html+html
+            #     print(html)
+            #     print('返回了HTML')
+            # print(html)
+            return render(request, 'article/comment.html',{'article': article, 'comments': comments, 'result': 1})
+        else:
             # print('返回是2')
-            # return HttpResponse('2')
+            return HttpResponse('2')
     else:
         comment_form = CommentsForm()
 
@@ -260,7 +260,8 @@ def article_detail(request, id, slug):
                                                                   'most_viewed': most_viewed,
                                                                   'columns': columns,
                                                                   'column_count_dict': column_count_dict,
-                                                                  'comment_form': comment_form
+                                                                  'comment_form': comment_form,
+                                                                  'result': 1
                                                                   })
 
 
