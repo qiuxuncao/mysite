@@ -1,0 +1,46 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="." method="post">{% csrf_token %}
+        <table>
+        {{ contact_form.as_table }}
+        </table>
+        <input type="button" value="提交" onclick="commit_feedback()">
+    </form>
+</body>
+
+<script type="text/javascript" src='{% static "js/jquery.js"%}'></script>
+<script type="text/javascript" src="{% static 'js/layer.js'%}"></script>
+
+<script type="text/javascript">
+
+    function commit_feedback() {
+        var formData= new FormData();
+        formData.append('name',$('#id_name').val());
+        formData.append('content',$('#id_content').val());
+        formData.append('email',$('#id_email').val());
+
+        $.ajax({
+            url:'{% url 'blog:blog_contact' %}',
+            type:'POST',
+            data: formData,
+            {#告诉jQuery不要去处理发送的数据, 发送对象。#}
+            processData : false,
+            {#告诉jQuery不要去设置Content-Type请求头#}
+            contentType : false,
+            success:function(e){
+                if (e=='1'){
+                    layer.msg("提交成功");
+                    location.href = "{% url 'blog:blog_title' %}";
+                }
+            },
+        });
+    }
+</script>
+
+</html>

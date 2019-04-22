@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'(?P<article_id>\d)/$', views.blog_content, name='blog_content'),
     url(r'^about/$', views.blog_about, name='blog_about'),
     url(r'^course/$', views.blog_course, name='blog_course'),
+    url(r'^contact/$', views.blog_contact, name='blog_contact'),
 ]
