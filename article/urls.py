@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from . import views, list_views
+from haystack.views import SearchView
+
 
 urlpatterns=[
     url(r'^article-column/$', views.article_column, name='article_column'),
@@ -14,5 +16,6 @@ urlpatterns=[
     url(r'^list-article-titles-bysomeone/(?P<author>[-\w]+)/$', list_views.article_titles_by_someone, name='list_article_titles_bysomeone'),
 
     url(r'^upload/$', views.upload_img, name='upload_img'),
-
+    # url(r'^search/$', views.MySeachView, name='haystack_search'),
+    url(r'search/$', SearchView(), name='haystack_search'),
 ]
