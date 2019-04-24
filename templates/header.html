@@ -22,6 +22,7 @@
             <li><a href="{% url 'blog:blog_contact' %}">联系我们</a></li>
         <li>
             <form action="{% url 'article:haystack_search' %}" method="get">
+                {#   此处的name='q'为固定写法，不能修改为其他属性值    #}
                 <input type="text" name="q" placeholder="请输入关键字">
                 <input type="submit" id="search" value="搜索">
             </form>
