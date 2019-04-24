@@ -17,5 +17,6 @@ urlpatterns=[
 
     url(r'^upload/$', views.upload_img, name='upload_img'),
     # url(r'^search/$', views.MySeachView, name='haystack_search'),
+    # SearchView()视图函数，默认使用的HTML模板路径为templates/search/search.html
     url(r'search/$', SearchView(), name='haystack_search'),
 ]

@@ -17,9 +17,15 @@
             <li><a href="{% url 'article:list_article_titles_bysomeone' request.user %}">我的文章</a></li>
             {% endif %}
 
-            <li><a href="{% url 'blog:blog_course' %}">课程(登录后可查看)</a></li>
+{#            <li><a href="{% url 'blog:blog_course' %}">课程(登录后可查看)</a></li>#}
             <li><a href="{% url 'blog:blog_about' %}">关于本站</a></li>
             <li><a href="{% url 'blog:blog_contact' %}">联系我们</a></li>
+        <li>
+            <form action="{% url 'article:haystack_search' %}" method="get">
+                <input type="text" name="q" placeholder="请输入关键字">
+                <input type="submit" id="search" value="搜索">
+            </form>
+        </li>
 	    </ul>
 
 	    <ul class="nav navbar-nav navbar-right" style="margin-right:10px">
@@ -28,7 +34,8 @@
 		    <li class="dropdown">
                     <div class="dropdown" style="margin-top:8px">
                         <button class='btn btn-default dropdown-toggle' type='button' id='dropdownMenu' data-toggle='dropdown'>
-                            欢迎您：{{ user.username }}，欢迎{{ request.session.username }}
+                            欢迎您：{{ user.username }}
+{#                            ，欢迎{{ request.session.username }}#}
                             <span class='caret'></span>
                         </button>
 
@@ -51,3 +58,35 @@
 </div>
 <script src="{% static 'js/jquery.js'%}"></script>
 <script src="{% static 'js/bootstrap.js' %}"></script>
+
+{#搜索框样式#}
+<style type="text/css">
+    #box{
+        width: 380px;
+        margin: 30px auto;
+        font-family: 'Microsoft YaHei';
+        font-size: 14px;
+    }
+    input{
+        width: 200px;
+        border: 1px solid #e2e2e2;
+        height: 30px;
+        float: left;
+        background-image: url(/static/images/logo.jpg);
+        background-repeat: no-repeat;
+        background-size: 25px;
+        background-position:5px center;
+        padding:0 0 0 40px;
+    }
+    #search{
+        width: 78px;
+        height: 32px;
+        float: right;
+        background: black;
+        color: white;
+        text-align: center;
+        line-height: 32px;
+        cursor: pointer;
+    }
+
+</style>
