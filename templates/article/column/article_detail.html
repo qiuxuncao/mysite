@@ -12,6 +12,7 @@
                     <a href="{% url 'article:list_article_titles_bysomeone' article.author %}">{{ article.author }}</a>
                     {{ total_views }}次阅读
                     <a href="{% url 'article:re_edit_article' article.id %}">编辑</a>
+{#                    <p>本文共{{ article.body|wordcount }}个字,阅读需分钟</p>#}
                 </p>
         </header>
 

@@ -30,7 +30,7 @@ class ArticlePost(models.Model):
     body = models.TextField()
     created = models.DateTimeField(default=timezone.now())
     updated = models.DateTimeField(auto_now_add=True)
-    # media/%Y%m%d/为图片的真实放置路径，因为settings中已经配置了MEDIA_ROOT为media文件夹
+    # media/%Y%m%d/为图片的真实放置路径，因为settings中已经配置了MEDIA_ROOT为media文件夹，blank=True允许表单的该字段对应值为空，意思是非必填字段
     avatar = models.ImageField(upload_to='%Y%m%d/', blank=True)
 
     class Meta:
@@ -43,7 +43,7 @@ class ArticlePost(models.Model):
         # 实例化该类时会返回对象的title
         return self.title
 
-    # 保存时处理图片
+
     def save(self, *args, **kwargs):
         '''
         每个数据模型都有一个save方法，这里重写该方法，目的是要实现self.slug = slugify(self.title)
