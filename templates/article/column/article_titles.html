@@ -25,7 +25,7 @@
             </a>
         </div>
             {% empty %}
-            <h3>该栏目还没有文章</h3>
+            <h3>您还没有发布过文章，点击去<a href="{% url 'article:article_post' %}">发布</a>。</h3>
         {% endfor %}
 {#{% include 'paginator.html' %}#}
     {#分页插件#}

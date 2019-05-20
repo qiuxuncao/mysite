@@ -108,7 +108,7 @@ def article_titles_by_someone(request, author, *args):
         articles = ArticlePost.objects.filter(author=user)
         # else:
         #     articles = ArticlePost.objects.filter(author=user)
-        print(articles[0].author)
+        # print(articles[0].author)
         paginator = Paginator(articles, 5)
         page = request.GET.get('page')
         try:
