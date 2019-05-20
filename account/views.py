@@ -43,7 +43,7 @@ def user_login(request):
         # request.session.set_expiry(6000)
 
         # 校验成功后跳转至blog
-        return redirect('/blog/')
+        return redirect('/article/list-article-titles/')
 
 
 def register(request):
