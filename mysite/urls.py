@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^blog/', include('blog.urls', namespace='blog', app_name='blog')),
     url(r'^account/', include('account.urls', namespace='account', app_name='account')),
     url(r'^article/', include('article.urls', namespace='article', app_name='article')),
+    url(r'^comment/', include('comment.urls', namespace='comment', app_name='comment')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,4 +1,6 @@
 from django.shortcuts import render,HttpResponse, get_object_or_404
+
+from comment.models import Comment
 from .models import ArticleColumn, ArticlePost, Comments
 from utils.decorators import login_wrapper
 from django.views.decorators.csrf import csrf_exempt
@@ -255,13 +257,15 @@ def article_detail(request, id, slug):
     else:
         comment_form = CommentsForm()
 
-    return render(request, 'article/column/article_detail.html', {'article': article,
+    comments = Comment.objects.filter(article=id)
+    return render(request, 'article/column/article_detail2.html', {'article': article,
                                                                   'total_views': total_views,
                                                                   'most_viewed': most_viewed,
                                                                   'columns': columns,
                                                                   'column_count_dict': column_count_dict,
                                                                   'comment_form': comment_form,
-                                                                  'result': 1
+                                                                  'result': 1,
+                                                                   'comments':comments
                                                                   })
 
 
