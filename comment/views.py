@@ -11,6 +11,7 @@ from utils.decorators import login_wrapper
 # @login_wrapper
 def post_comment(request, article_id, parent_comment_id=None):
     article = get_object_or_404(ArticlePost, id=article_id)
+    slug = article.slug
     print(article_id, parent_comment_id)
     # 处理post请求
     if request.method == 'POST':
@@ -33,7 +34,9 @@ def post_comment(request, article_id, parent_comment_id=None):
                 return HttpResponse('200 OK')
 
             new_comment.save()
+            # 评论完成刷新该页面,后面优化为aja提交数据，局部刷新
             return redirect('article:list_article_titles')
+            # return redirect('article:article_detail' % (article_id, slug))
         else:
             return HttpResponse("表单有误，重新填写")
 

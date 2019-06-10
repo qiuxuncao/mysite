@@ -72,6 +72,7 @@ def register(request):
 # @login_wrapper
 def myself(request):
     user = User.objects.get(username=request.user.username)
+    print(user)
     userprofile = UserProfile.objects.get(user=user)
     userinfo = UserInfo.objects.get(user=user)
     return render(request, "account/myself.html", {'user': user, 'userprofile': userprofile, 'userinfo': userinfo})
