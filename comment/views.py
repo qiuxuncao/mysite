@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 
 from article.models import ArticlePost
 from comment.forms import CommentForm
@@ -35,8 +35,11 @@ def post_comment(request, article_id, parent_comment_id=None):
 
             new_comment.save()
             # 评论完成刷新该页面,后面优化为aja提交数据，局部刷新
-            return redirect('article:list_article_titles')
-            # return redirect('article:article_detail' % (article_id, slug))
+            # return redirect('article:list_article_titles')
+            # reverse反转url时需要传参数，要用到kwargs参数，会传入一个字典类型的参数
+            # article_detail_url = reverse('article:article_detail', kwargs={'id': article_id, 'slug': slug})
+            article_detail_url = '/article/article-detail/%s/%s' % (article_id, slug)
+            return redirect(article_detail_url)
         else:
             return HttpResponse("表单有误，重新填写")
 
