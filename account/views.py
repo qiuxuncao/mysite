@@ -8,10 +8,16 @@ from .models import UserInfo, UserProfile
 # from utils.decorators import login_wrapper
 # Create your views here.
 
-
+# 由于获取的当前url会执行两次，第一次获取正确，第二次为None,所以定义空的列表，将两次获取的值都放进去，用第一次的值
+li = []
 def user_login(request):
 
     if request.method == 'GET':
+        # 获取从ajax传递来的登录前的url
+        cur_url = request.GET.get('cur_url')
+        li.append(cur_url)
+        print('当前url是%s' % li[0])
+        print(li)
         login_form = LoginForm()
         return render(request, "account/login2.html", {"form": login_form})
 
@@ -34,7 +40,7 @@ def user_login(request):
         else:
             error_msg = '请输入合法数据'
             return render(request, 'account/login2.html', {'form': login_form, 'error_msg': error_msg})
-        # 校验成功后跳转至blog
+
 
         # 设置session信息
         request.session['is_login'] = True
@@ -43,8 +49,8 @@ def user_login(request):
         # request.session.set_expiry(6000)
 
         # 校验成功后跳转至blog
-        return redirect('/article/list-article-titles/')
-
+        # return redirect('/article/list-article-titles/')
+        return redirect(li[0])
 
 def register(request):
     if request.method == 'POST':
