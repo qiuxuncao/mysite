@@ -27,25 +27,25 @@
             {% empty %}
             <h3>您还没有发布过文章，点击去<a href="{% url 'article:article_post' %}">发布</a>。</h3>
         {% endfor %}
-{% include 'paginator.html' %}
+{#{% include 'paginator.html' %}#}
     {#分页插件#}
-{#<div class="pagination">#}
-{#    <span class="step-links">#}
-{#        {% if page.has_previous %}#}
-{#            <a href="{{ request.build_absolute_uri }}?page={{ page.previous_page_number }}">上一页</a>#}
-{#        {% endif %}#}
-{##}
-{#        <span class="current">#}
-{#            Page{{ page.number }} of {{ page.paginator.num_pages }}#}
-{#        </span>#}
-{##}
-{#        {% if page.has_next %}#}
-{#            <a href="{{ request.build_absolute_uri }}?page={{ page.next_page_number }}">下一页</a>#}
-{#        {% endif %}#}
-{#    </span>#}
-{#</div>#}
+<div class="pagination">
+    <span class="step-links">
+        {% if page.has_previous %}
+            <a href="{{ request.build_absolute_uri }}&page={{ page.previous_page_number }}">上一页</a>
+{#            <a href="?page={{ page.previous_page_number }}&{{ request.get_full_path }}">#}
+        {% endif %}
 
+        <span class="current">
+            Page{{ page.number }} of {{ page.paginator.num_pages }}
+        </span>
 
+        {% if page.has_next %}
+            <a href="{{ request.build_absolute_uri }}&page={{ page.next_page_number }}">下一页</a>
+        {% endif %}
+    </span>
+</div>
+{#    </div>#}
     </div>
 
 {#    右侧栏#}

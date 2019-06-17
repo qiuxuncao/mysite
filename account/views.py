@@ -1,5 +1,5 @@
 
-from django.shortcuts import render, redirect,HttpResponseRedirect
+from django.shortcuts import render, redirect,HttpResponseRedirect,reverse
 from .forms import LoginForm, RegistrationForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
@@ -8,16 +8,13 @@ from .models import UserInfo, UserProfile
 # from utils.decorators import login_wrapper
 # Create your views here.
 
-# 由于获取的当前url会执行两次，第一次获取正确，第二次为None,所以定义空的列表，将两次获取的值都放进去，用第一次的值
-li = []
-def user_login(request):
 
+def user_login(request):
+    # 定义为全局变量，post登录请求后依然可以使用该变量进行跳转
+    global cur_url
     if request.method == 'GET':
-        # 获取从ajax传递来的登录前的url
+        # 获取从url传递来的登录前的url
         cur_url = request.GET.get('cur_url')
-        li.append(cur_url)
-        print('当前url是%s' % li[0])
-        print(li)
         login_form = LoginForm()
         return render(request, "account/login2.html", {"form": login_form})
 
@@ -47,10 +44,14 @@ def user_login(request):
         request.session['username'] = cd['username']
         #设置session有效期为？秒，不管操作不操作系统，10秒后都会自动失效
         # request.session.set_expiry(6000)
+        if cur_url:
 
-        # 校验成功后跳转至blog
-        # return redirect('/article/list-article-titles/')
-        return redirect(li[0])
+            # 校验成功后跳转至登录前的页面
+            return redirect(cur_url)
+        else:
+
+            return redirect(reverse('article:list_article_titles'))
+
 
 def register(request):
     if request.method == 'POST':

@@ -141,8 +141,7 @@
     {% else %}
         <br>
         <h5 class="row justify-content-center">
-{#            请<a href="{% url 'account:user_login' %}" onclick="next_href()">登录</a>后回复#}
-            请<button type="button" class="btn btn-primary" onclick="cur_href()">登录</button>后回复
+            请<a href="{% url 'account:user_login' %}?cur_url={{ request.path }}">登录</a>后回复
         </h5>
         <br>
     {% endif %}
@@ -278,11 +277,28 @@
                 url: '{% url 'account:user_login' %}',
                 type: 'GET',
                 data: {cur_url:cur_url},
-                success:function () {
-                    window.location.href = '{% url 'account:user_login' %}';
-                }
             })
         }
 </script>
+
+<script type="text/javascript">
+        function login() {
+            {#var cur_url = window.location.href;#}
+            window.location.href = '{% url 'account:user_login' %}';
+
+            $.ajax({
+                    url: '{% url 'account:user_login' %}',
+                    type: 'GET',
+                    {#data: {cur_url:cur_url},#}
+                    success:function (data) {
+                        if (data=='ok') {
+                            window.location.href = '{% url 'article:list_article_titles' %}';
+                        }
+                    }
+                })
+        }
+</script>
+
+
 
 {% endblock %}

@@ -99,7 +99,7 @@ def article_titles_by_someone(request, author, *args):
         except EmptyPage:
             current_page = paginator.page(paginator.num_pages)
             articles_list = current_page.object_list
-        return render(request, 'article/column/article_titles.html', {'articles': articles_list,
+        return render(request, 'article/column/article_titles_column.html', {'articles': articles_list,
                                                                   'page': current_page,
                                                                   'column_count_dict': column_count_dict,
                                                                   'author': author
